@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" ng-app="exzotron">
+<head th:insert="head.html :: head(#{basic.page.title})"></head>
+<body class="bg-light" ng-class="currentUser.theme == 2? 'dark' : ''">
+<nav class="navbar navbar-expand navbar-dark bg-dark border-bottom" style="min-width: 1600px" ng-controller="NavbarController">
+    <a class="navbar-brand" th:href="@{/}"><img th:src="@{/static/images/logo.png}" class="d-inline-block align-top"/></a>
+    <div class="navbar-collapse">
+        <ul class="navbar-nav" ng-if="currentUser">
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div class="m-0 form-group width-100">
+                        <input type="text" ng-model-options="{debounce: 500}" ng-model="ui.search" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+              <div class="nav-link">
+                  <div class="mt-2" ng-bind="currentUser.usersName"></div>
+              </div>
+            </li>
+            <li class="nav-item">
+               <div class="nav-link">
+                   <div ng-show="accountData">
+                       <div class="input-group width-110" uib-tooltip="{{'CURRENT_FUEL_TYPE'|translate}}">
+                           <select ng-change="updateCurrentProduct(currentProductId)" ng-model="currentProductId" class="form-control form-control-sm">
+                               <option ng-repeat="option in products" ng-value="option.id">{{option.name}}</option>
+                           </select>
+                       </div>
+                   </div>
+               </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div class="mt-2" ng-bind="displayBalance()"></div>
+                </div>
+            </li>
+            <li class="nav-item">
+               <div class="nav-link">
+                   <div class="mt-2" ng-bind="currentUser.companyName"></div>
+               </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div class="mt-2" ng-bind="displayObject()"></div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link">
+<!--                    <div class="m-0 form-group width-70">-->
+<!--                        <input type="text" class="form-control form-control-sm" placeholder="C" uib-datepicker-popup="{{ui.format}}"-->
+<!--                               ng-model="ui.dateFrom" is-open="ui.dateFromOpened" datepicker-options="{maxDate:ui.dateTo,startingDay:1}" ng-click="ui.dateFromOpened=!ui.dateFromOpened"/>-->
+<!--                    </div>-->
+                    <div class="dropdown">
+                        <b id="dropdown" role="button" data-toggle="dropdown" data-target="#" href="#">
+                            <div class="input-group input-group-sm" ng-click="ui.dateFromOpened=!ui.dateFromOpened; ui.dateToOpened=false">
+                                <input id="date_time" type="text" class="form-control" data-ng-model="ui.dateFrom">
+                                <div class="input-group-append input-group-sm">
+                                    <span class="input-group-text" id="basic-addon2"><i class="bi bi-calendar"></i></span>
+                                </div>
+                            </div>
+                        </b>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':ui.dateFromOpened}">
+                            <datetimepicker data-ng-model="ui.dateFrom"
+                                            data-on-set-time="setDatetimeFrom(newDate, oldDate)"
+                                            data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+<!--            <li class="nav-item">-->
+<!--                <div class="nav-link">-->
+<!--                    <div class="m-0 form-group">-->
+<!--                        <div class="dropdown hours">-->
+<!--                            <div uib-timepicker ng-model-options="{ debounce: 1000 }" ng-model="ui.dateFrom"-->
+<!--                                 ng-click="ui.showFromTimeDropdown=!ui.showFromTimeDropdown" data-toggle="dropdown"-->
+<!--                                 show-spinners="false" hour-step="1" minute-step="10" show-meridian="false"></div>-->
+<!--                            <div class="dropdown-menu" style="cursor: pointer"-->
+<!--                                 ng-style="{display:ui.showFromTimeDropdown?'block':'none'}">-->
+<!--                                <b class="dropdown-item" ng-repeat="hour in hours"-->
+<!--                                   ng-click="setTimeFrom(hour.hour)">{{hour.label}}</b>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </li>-->
+
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div class="m-0 form-group width-75">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light dropdown-toggle form-control form-control-sm" type="button"
+                                    ng-click="ui.showPeriodDropDown = !ui.showPeriodDropDown" data-toggle="dropdown"
+                                    aria-expanded="false">
+                                {{'PERIOD'|translate}}
+                            </button>
+                            <div class="dropdown-menu" style="cursor: pointer" ng-style="{display:ui.showPeriodDropDown?'block':'none'}">
+                                <b class="dropdown-item" ng-repeat="range in ranges" ng-click="setDateRange(range)">{{range.label}}</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-link">
+<!--                    <div class="m-0 form-group width-70">-->
+<!--                        <input type="text" class="form-control form-control-sm" placeholder="По" uib-datepicker-popup="{{ui.format}}"-->
+<!--                               ng-model="ui.dateTo" is-open="ui.dateToOpened" datepicker-options="{minDate:ui.dateFrom,startingDay:1,maxDate:ui.now}" ng-click="ui.dateToOpened=!ui.dateToOpened"/>-->
+<!--                    </div>-->
+
+                    <div class="dropdown">
+                        <b id="dropdownTo" role="button" data-toggle="dropdown" data-target="#" href="#">
+                            <div class="input-group input-group-sm" ng-click="ui.dateToOpened=!ui.dateToOpened;ui.dateFromOpened = false">
+                                <input id="date_time1" type="text" class="form-control" data-ng-model="ui.dateTo">
+                                <div class="input-group-append input-group-sm">
+                                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar"></i></span>
+                                </div>
+                            </div>
+                        </b>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':ui.dateToOpened}">
+                            <datetimepicker data-ng-model="ui.dateTo"
+                                            data-on-set-time="setDatetimeTo(newDate, oldDate)"
+                                            data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+<!--            <li class="nav-item">-->
+<!--                <div class="nav-link">-->
+<!--                    <div class="m-0 form-group">-->
+<!--                        <div class="dropdown hours">-->
+<!--                            <div uib-timepicker ng-model-options="{ debounce: 1000 }"-->
+<!--                                 ng-click="ui.showToTimeDropdown=!ui.showToTimeDropdown" data-toggle="dropdown"-->
+<!--                                 aria-expanded="false" ng-model="ui.dateTo" show-spinners="false" hour-step="1"-->
+<!--                                 minute-step="10" show-meridian="false"></div>-->
+<!--                            <div class="dropdown-menu" style="cursor: pointer"-->
+<!--                                 ng-style="{display:ui.showToTimeDropdown?'block':'none'}">-->
+<!--                                <b class="dropdown-item" ng-repeat="hour in hours"-->
+<!--                                   ng-click="setTimeTo(hour.hour)">{{hour.label}}</b>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </li>-->
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div class="m-0 form-group width-115">
+                        <select ng-change="changeLang(ui.lang)" name="lang" ng-model="ui.lang" class="form-control form-control-sm">
+                            <option ng-repeat="option in languages" ng-value="option.value">{{option.label}}</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div ng-show="accountData && divisions">
+                        <div class="input-group width-110" uib-tooltip="{{'DIVISION'|translate}}">
+                            <select ng-disabled="isContractor || fixedDivision" ng-change="updateCurrentDivision(currentDivisionId);" ng-model="currentDivisionId" class="form-control form-control-sm">
+                                <option ng-repeat="option in divisions" ng-value="option.id">{{option.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-link">
+                    <div ng-show="accountData && partners">
+                        <div class="input-group width-110" uib-tooltip="{{'CONTRACTOR'|translate}}">
+                            <select ng-disabled="isContractor" ng-change="updateCurrentPartner(currentPartnerId)" ng-model="currentPartnerId" class="form-control form-control-sm">
+                                <option ng-repeat="option in partners" ng-value="option.id">{{option.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <a class="nav-link float-right" th:href="@{/logout}" th:text="#{login.form.logout.button}"></a>
+    <a class="nav-link float-right" ng-click="setTheme()"><i class="bi bi-moon"></i></a>
+</nav>
+<!--<div id="smallgraph" style="width: 600px;height: 50px;"></div>-->
+<div class="container-fluid p-0" style="height: calc(100vh - 80px); min-width: 1600px;" ng-controller="SidebarController">
+    <div data-split-pane data-split-pane-properties="splitPaneProperties" class="row m-0" ng-init="setPaneProperties()">
+        <div data-split-pane-component data-width="20em" class="bg-light sidebar overflow-hidden">
+            <div class="sidebar-menu list-group list-group-flush border-right border-bottom shadow">
+                <div ng-click="showSubPanel(menuItem)" ng-show="displayMenuItem(menuItem)"
+                   class="list-group-item list-group-item-action bg-light"
+                   ng-repeat="menuItem in menuItems">
+                    <b ng-bind="menuItem.displayName + (menuItem.menuId==-1?' < ' + menuItem.parent.displayName + ' / ' + currentMenu.displayName :'')"></b>
+                    <b>
+                    <a href="{{menuItem.indexHelp}}" ng-click="$event.stopPropagation();"
+                       ng-if="menuItem.indexHelp" target="_blank"
+                       tooltip-append-to-body="true"
+                       uib-tooltip="Нажмите для перехода к видео инструкции">
+                       <i class="bi bi-question-circle text-secondary align-text-top"></i>
+                    </a>
+                    </b>
+                </div>
+            </div>
+            <!--Detailed RFID Report-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getObjects();getRfidObjects()" ng-if="showDetailedRfidCardsPanel()">
+                <div ng-include="'static/src/left_side_tables/rfid_detailed.html'"></div>
+            </div>
+            <!--Balance-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getObjectRfidBalance()" ng-if="showRfidCardsPanel()">
+                <div ng-include="'static/src/left_side_tables/balance.html'"></div>
+            </div>
+            <!--Sensors-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showSensorsPanel()">
+                <div ng-include="'static/src/left_side_tables/sensors.html'"></div>
+            </div>
+            <!--Tanks-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="ui.showChartsByNodes = false;getTankLog()" ng-if="showTanksPanel()">
+                <div ng-include="'static/src/left_side_tables/fuel_storage.html'"></div>
+            </div>
+            <!--Objects-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getObjects()" ng-if="showObjectsPanel()">
+                <div ng-include="'static/src/left_side_tables/objects.html'"></div>
+            </div>
+            <!--Rfid Objects-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getRfidObjects()" ng-if="showRfidObjectsPanel()">
+                <div ng-include="'static/src/left_side_tables/rfid_objects.html'"></div>
+            </div>
+            <!--Rfid Objects Enrol-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getObjectsRfidForCurrentUser()" ng-if="showRfidObjectsEnrolPanel()">
+                <div ng-include="'static/src/left_side_tables/rfid_objects_enrol.html'"></div>
+            </div>
+            <!--User chat-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showUserChat()">
+                <div ng-include="'static/src/left_side_tables/user_chat.html'"></div>
+            </div>
+            <!--Company Income-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showCompanyOperationPanel()">
+                <div ng-include="'static/src/left_side_tables/company_operation.html'"></div>
+            </div>
+            <!--Weight operations-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getWeightOperations()" ng-if="showWeightOperationPanel()">
+                <div ng-include="'static/src/left_side_tables/weight_operation.html'"></div>
+            </div>
+            <!--Weight operations-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getWeightOperations()" ng-if="showWeightingsPanel()">
+                <div ng-include="'static/src/left_side_tables/weightings.html'"></div>
+            </div>
+            <!--Objects Income-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getObjects()" ng-if="showObjectsIncomePanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0">
+                    <div class="p-2">
+                        <div class="form-check form-check-inline">
+                            <div class="custom-control custom-checkbox p-1">
+                                <input class="form-check-input custom-control-input" ng-change="selectAllObjects()" type="checkbox" ng-model="ui.selectAllObjects" id="select_all_objects">
+                                <label class="form-check-label custom-control-label" for="select_all_objects" translate>SELECT_ALL</label>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="text" ng-model="ui.objectsSearch" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <button class="btn btn-sm btn-success" ng-click="reportObject()" translate><i class="bi bi-check"></i></button>
+                        </div>
+                    </div>
+                    <table id="objects_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="pl-4" id="object_name"><span ts-criteria="name" translate>NAME</span></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in objects | filter: {name:ui.objectsSearch}" ts-repeat>
+                            <td class="pl-1">
+                                <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox p-0">
+                                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedObjects" checklist-value="item.imei" id={{item.id+'object'}}>
+                                        <label class="form-check-label custom-control-label" for={{item.id+'object'}}>{{item.name}}</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--Vehicle Income-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getVehicles()" ng-if="showVehiclesIncomePanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0">
+                    <div class="p-2">
+                        <div class="form-check form-check-inline">
+                            <div class="custom-control custom-checkbox p-1">
+                                <input class="form-check-input custom-control-input" ng-change="selectAllVehicles()" type="checkbox" ng-model="ui.selectAllVehicles" id="select_all_vehicles">
+                                <label class="form-check-label custom-control-label" for="select_all_vehicles" translate>SELECT_ALL</label>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="text" ng-model="ui.vehiclesSearch" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <button class="btn btn-sm btn-success" ng-click="reportVehicle()" translate><i class="bi bi-check"></i></button>
+                        </div>
+                    </div>
+                    <table id="objects_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="pl-4" id="object_name"><span ts-criteria="name" translate>NAME</span></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in vehicles | filter: {name:ui.vehiclesSearch}" ts-repeat>
+                            <td class="pl-1">
+                                <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox p-0">
+                                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedVehicles" checklist-value="item.id" id={{item.id+'vehicle'}}>
+                                        <label class="form-check-label custom-control-label" for={{item.id+'vehicle'}}>{{item.name}}</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--Api Server Objects-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showApiServerObjectsPanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0">
+                    <div class="p-2">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input ng-model="ui.apiObjectsRadio" ng-value="0" type="radio" id="api_objects_radio" ng-click="getApiServerObjects()" name="api_objects_radio" class="custom-control-input">
+                            <label class="custom-control-label" for="api_objects_radio" translate>OBJECTS</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input ng-model="ui.apiObjectsRadio" ng-value="1" type="radio" id="api_objects_rfid_radio" ng-click="getApiServerObjectsRfid()" name="api_objects_radio" class="custom-control-input">
+                            <label class="custom-control-label" for="api_objects_rfid_radio">RFID</label>
+                        </div>
+                        <div class="custom-control  custom-control-inline">
+                            <div class="custom-control custom-checkbox p-1">
+                                <input class="form-check-input custom-control-input" ng-change="selectAllSync()" type="checkbox" ng-model="ui.selectAllSync" id="select_all_sync">
+                                <label class="form-check-label custom-control-label" for="select_all_sync" translate>SELECT_ALL</label>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <button class="btn btn-sm btn-success" ng-click="synchronize()" translate><i class="bi bi-check"></i></button>
+                        </div>
+                    </div>
+                    <table ng-if="ui.apiObjectsRadio==0" rz-table id="server_objects_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="col" id="server_object_real_id"><span ts-criteria="realId|trim" translate>ID</span></th>
+                            <th class="col" id="server_object_imei"><span ts-criteria="imei|trim" translate>IMEI</span></th>
+                            <th class="rz-hide" id="server_object_name"><span ts-criteria="name|trim" translate>NAME</span></th>
+                            <th class="rz-hide width-50" id="server_object_exists"><span translate>EXISTS</span></th>
+                            <th class="rz-hide width-25" id="server_object_add"><span>+</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="object in serverObjects" ts-repeat>
+                            <td class="ml-1" ng-bind="object.realId"></td>
+                            <td ng-bind="object.imei"></td>
+                            <td ng-bind="object.name"></td>
+                            <td class="width-50"><i ng-class="object.exists?'bi bi-check text-success':''"></i></td>
+                            <td class="width-25">
+                                <div class="form-check form-check-inline" ng-show="!object.exists">
+                                    <div class="custom-control custom-checkbox p-0">
+                                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedObjectsToAdd" checklist-value="object" id={{object.realId+'object_add'}}>
+                                        <label class="form-check-label custom-control-label" for={{object.realId+'object_add'}}></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table ng-if="ui.apiObjectsRadio==1" rz-table id="server_objects_rfid_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="col" id="server_object_rfid_name"><span ts-criteria="name|trim" translate>NAME</span></th>
+                            <th class="rz-hide" id="server_object_rfid_rfid"><span ts-criteria="rfid|trim" translate>RFID</span></th>
+                            <th class="rz-hide width-50" id="server_object_rfid_exists"><span translate>EXISTS</span></th>
+                            <th class="rz-hide width-25" id="server_object_rfid_add"><span>+</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="object in serverObjectsRfid" ts-repeat>
+                            <td class="ml-1" ng-bind="object.name"></td>
+                            <td ng-bind="object.rfid"></td>
+                            <td class="width-50"><i ng-class="object.exists?'bi bi-check text-success':''"></i></td>
+                            <td class="width-25">
+                                <div class="form-check form-check-inline" ng-show="!object.exists">
+                                    <div class="custom-control custom-checkbox p-0">
+                                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedRfidObjectsToAdd" checklist-value="object" id={{object.rfid+'object_rfid_add'}}>
+                                        <label class="form-check-label custom-control-label" for={{object.rfid+'object_rfid_add'}}></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--Vehicle Sensors-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getVehicleSensors()" ng-if="showVehicleSensorsPanel()">
+                <div ng-include="'static/src/left_side_tables/vehicle.html'"></div>
+            </div>
+            <!--Income-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showIncomePanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0" ng-init="getFuelMoving()">
+                    <div class="p-2">
+                        <div class="form-check form-check-inline">
+                            <button class="btn btn-sm btn-success width-110" ng-disabled="generatingInProgress" ng-click="generateTankLogs()">
+                                <span ng-if="!generatingInProgress" translate>GENERATE</span><span ng-if="generatingInProgress" class="position-relative d-block" style="bottom: 2px" us-spinner="{width:0.7}" spinner-key="item.id" spinner-start-active="true"><span>&nbsp;</span></span>
+                            </button>
+<!--                            <button class="btn btn-sm btn-success ml-2" ng-click="moveFuel()" translate>MOVE</button>-->
+                        </div>
+                    </div>
+<!--                    <table rz-table class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table">-->
+<!--                        <thead class="thead-dark">-->
+<!--                        <tr>-->
+<!--                            <th class="col"><span translate>DATE</span></th>-->
+<!--                            <th class="col ml-1"><span translate>STOREHOUSE_FROM</span></th>-->
+<!--                            <th class="col"><span translate>STOREHOUSE_TO</span></th>-->
+<!--                            <th class="col"><span translate>COUNT</span></th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr ng-repeat="item in fuelMoving">-->
+<!--                            <td ng-bind="item.dateTime | date:'medium'"></td>-->
+<!--                            <td class="ml-1" ng-bind="item.storageFromName"></td>-->
+<!--                            <td ng-bind="item.storageToName"></td>-->
+<!--                            <td ng-bind="item.count | number : 2"></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+                </div>
+            </div>
+            <!--Rfid Objects Map-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getObjectsByProduct()" ng-if="showRfidMapPanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0">
+                    <div class="p-2">
+                        <div class="form-check form-check-inline">
+                            <button class="btn btn-sm btn-success width-110" ng-show="currentRfid" ng-disabled="recalcInProgress" ng-click="recalculateRfid()">
+                                <span ng-if="!recalcInProgress" translate>RECALCULATE</span>
+                                <span ng-if="recalcInProgress" class="position-relative d-block" style="bottom: 2px" us-spinner="{width:0.7}" spinner-key="item.id" spinner-start-active="true"><span>&nbsp;</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <table rz-table id="vehicle_sensors_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="rz-hide col" id="object_by_product_name"><span ts-criteria="name|trim" translate>NAME</span></th>
+                            <th class="rz-hide col" id="object_by_product_imei"><span ts-criteria="imei|trim" translate>IMEI</span></th>
+                            <th class="rz-hide col">
+                                <div class="form-check form-check-inline">
+                                    <div class="custom-checkbox">
+                                        <input class="form-check-input custom-control-input" ng-change="mapAllObjectsToRfid(ui.mapAllObjects)" type="checkbox" ng-model="ui.mapAllObjects" id="select_all_objects_by_product">
+                                        <label class="form-check-label custom-control-label" for="select_all_objects_by_product"></label>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in objectsByProduct" ts-repeat>
+                            <td class="pl-1" ng-bind="item.name"></td>
+                            <td ng-bind="item.imei"></td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox p-0">
+                                        <input class="form-check-input custom-control-input" type="checkbox" ng-disabled="ui.mapAllObjects" ng-change="updateRfidObjectMapping(item.mapped, item.id)" ng-model="item.mapped" id={{item.imei+'object_imei'}}>
+                                        <label class="form-check-label custom-control-label" for={{item.imei+'object_imei'}}></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showCalibrationTablePanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0" style="max-height: 50vh">
+                    <table class="m-2">
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input ng-model="ui.calibrationParam" ng-value="0" type="radio" id="param_out_0" ng-click="prepareCalibrationTableChart(0)" name="calibration_params" class="custom-control-input">
+                                    <label class="custom-control-label" for="param_out_0" translate>PARAM_OUT_0</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input ng-model="ui.calibrationParam" ng-value="1" type="radio" id="param_out_1" ng-click="prepareCalibrationTableChart(1)" name="calibration_params" class="custom-control-input">
+                                    <label class="custom-control-label" for="param_out_1" translate>PARAM_OUT_1</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input ng-model="ui.calibrationParam" ng-value="2" type="radio" id="param_out_2" ng-click="prepareCalibrationTableChart(2)" name="calibration_params" class="custom-control-input">
+                                    <label class="custom-control-label" for="param_out_2" translate>PARAM_OUT_2</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input ng-model="ui.calibrationParam" ng-value="3" type="radio" id="param_out_3" ng-click="prepareCalibrationTableChart(3)" name="calibration_params" class="custom-control-input">
+                                    <label class="custom-control-label" for="param_out_3" translate>PARAM_OUT_3</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input ng-value="0" type="checkbox" id="param_out_check_0" checklist-model="ui.selectedCalibrationParamsOut" checklist-value="0" name="calibration_params_check" class="custom-control-input">
+                                    <label class="form-check-label custom-control-label" for="param_out_check_0"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input ng-value="1" type="checkbox" id="param_out_check_1" checklist-model="ui.selectedCalibrationParamsOut" checklist-value="1" name="calibration_params_check" class="custom-control-input">
+                                    <label class="form-check-label custom-control-label" for="param_out_check_1"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input ng-value="2" type="checkbox" id="param_out_check_2" checklist-model="ui.selectedCalibrationParamsOut" checklist-value="2" name="calibration_params_check" class="custom-control-input">
+                                    <label class="form-check-label custom-control-label" for="param_out_check_2"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input ng-value="3" type="checkbox" id="param_out_check_3" checklist-model="ui.selectedCalibrationParamsOut" checklist-value="3" name="calibration_params_check" class="custom-control-input">
+                                    <label class="form-check-label custom-control-label" for="param_out_check_3"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <div class="dropdown">
+                                        <button class="btn btn-success btn-sm dropdown-toggle" type="button" ng-click="showDownloadDropdown = !showDownloadDropdown" data-toggle="dropdown" aria-expanded="false">
+                                            Сохранить
+                                        </button>
+                                        <div class="dropdown-menu" style="cursor: pointer" ng-style="{display:showDownloadDropdown?'block':'none'}">
+                                            <a class="dropdown-item" ng-href="{{getCalibrationExportUrl('FORT_MONITOR', 'fort-monitor-calibration.txt')}}" download="fort-monitor-calibration.txt">Fort Monitor</a>
+                                            <a class="dropdown-item" ng-href="{{getCalibrationExportUrl('GLONASS_SOFT', 'glonass-soft-calibration.csv')}}" download="glonass-soft-calibration.csv">Glonass Soft</a>
+                                            <a class="dropdown-item" ng-href="{{getCalibrationExportUrl('OMNICOMM_CTB', 'omnicomm-calibration.ctb')}}" download="omnicomm-calibration.ctb">Omnicomm ctb</a>
+                                            <a class="dropdown-item" ng-href="{{getCalibrationExportUrl('OMNICOMM_XML', 'omnicomm-calibration.xml')}}" download="omnicomm-calibration.xml">Omnicomm xml</a>
+                                            <a class="dropdown-item" ng-href="{{getCalibrationExportUrl('WIALON', 'wialon-calibration.csv')}}" download="wialon-calibration.csv">Wialon csv</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table rz-table id="vehicle_sensors_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="col" id="calibration_table_id"><span ts-criteria="name|trim" translate>ID</span></th>
+                            <th class="col" id="param_in"><span ts-criteria="imei|trim" translate>PARAM_IN</span></th>
+                            <th class="col" id="param_in"><span ts-criteria="imei|trim" translate>STRAIT_AMOUNT</span></th>
+                            <th class="col" id="param_out0"><span ts-criteria="imei|trim" translate>PARAM_OUT_0</span></th>
+                            <th class="col" id="param_out1"><span ts-criteria="imei|trim" translate>PARAM_OUT_1</span></th>
+                            <th class="col" id="param_out2"><span ts-criteria="imei|trim" translate>PARAM_OUT_2</span></th>
+                            <th class="col" id="param_out3"><span ts-criteria="imei|trim" translate>PARAM_OUT_3</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in calibrationTable" ts-repeat>
+                            <td class="pl-1" ng-bind="item.id"></td>
+                            <td ng-bind="item.paramIn"></td>
+                            <td ng-bind="!$first ? item.paramIn - calibrationTable[$index-1].paramIn : item.paramIn"></td>
+                            <td ng-bind="item.paramOut0"></td>
+                            <td ng-bind="item.paramOut1"></td>
+                            <td ng-bind="item.paramOut2"></td>
+                            <td ng-bind="item.paramOut3"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="currentCalibration">
+                    <div class="chartdiv" id="{{'chartdiv_cal'}}" style="height: 200px"></div>
+                </div>
+            </div>
+            <!--Divisions-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getDivisions()" ng-if="showDivisionsPanel()">
+                <div class="col object-rfid-balance-table-wrapper p-0">
+                    <div class="p-2">
+                        <div class="form-check form-check-inline">
+                            <div class="custom-control custom-checkbox p-1">
+                                <input class="form-check-input custom-control-input" ng-change="selectAllDivisions()" type="checkbox" ng-model="ui.selectAllDivisions" id="select_all_divisions">
+                                <label class="form-check-label custom-control-label" for="select_all_divisions" translate>SELECT_ALL</label>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="text" ng-model="ui.divisionSearch" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <button class="btn btn-sm btn-success" ng-click="reportDivision()" translate><i class="bi bi-check"></i></button>
+                        </div>
+                    </div>
+                    <table id="objects_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+                        <thead class="thead-dark">
+                        <tr>
+                            <th class="pl-4" id="object_name"><span ts-criteria="name" translate>NAME</span></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in divisions | filter: {name:ui.divisionSearch}" ts-repeat>
+                            <td class="pl-1">
+                                <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox p-0">
+                                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedDivisions" checklist-value="item.id" id={{item.id+'division'}}>
+                                        <label class="form-check-label custom-control-label" for={{item.id+'division'}}>{{item.name}}</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--Node info-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showNodeInfoPanel()">
+                <div class="p-1">
+                    <form novalidate name="nodeInfoForm" ng-submit="ok(nodeInfoForm)">
+                        <div class="form-group">
+                            <label for="node_imei">IMEI</label>
+                            <input readonly ng-class="{'is-invalid':(nodeInfoForm.node_imei.$error.required)  && (nodeInfoForm.node_imei.$touched || nodeInfoForm.$submitted)}"
+                                   ng-required="true" ng-model="nodeInfo.imei" type="text"
+                                   class="form-control form-control-sm" id="node_imei" name="node_imei">
+                        </div>
+                        <div class="form-group">
+                            <label for="node_name" translate>NAME</label>
+                            <input readonly ng-class="{'is-invalid':(nodeInfoForm.node_name.$error.required)  && (nodeInfoForm.node_name.$touched || nodeInfoForm.$submitted)}"
+                                   ng-required="true" ng-model="nodeInfo.name" type="text"
+                                   class="form-control form-control-sm" id="node_name" name="node_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="node_product" translate>PRODUCT</label>
+                            <input readonly ng-class="{'is-invalid':(nodeInfoForm.node_product.$error.required)  && (nodeInfoForm.node_product.$touched || nodeInfoForm.$submitted)}"
+                                   ng-required="true" ng-model="nodeInfo.productName" type="text"
+                                   class="form-control form-control-sm" id="node_product" name="node_product">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--Storehouses-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-init="getStorehouses()" ng-if="showStorehousesPanel()">
+                <div ng-include="'static/src/left_side_tables/storehouses.html'"></div>
+            </div>
+            <!--Employee photo-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showEmployeePhotoPanel()">
+                <div ng-include="'static/src/left_side_tables/employee_photo.html'"></div>
+            </div>
+            <!--Camera data-->
+            <div class="border-right border-bottom shadow left-panel-wrapper" ng-if="showObservationObjectPanel()">
+                <div class="p-2">
+                    <div class="form-check form-check-inline">
+                        <button class="btn btn-sm btn-success" ng-click="getCameraData()">
+                            <span><i class="bi bi-check"></i></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col object-rfid-balance-table-wrapper p-0">
+                    <table class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table">
+                        <tbody>
+                        <tr ng-repeat="item in cameraData">
+                            <td>
+                                <div>
+                                    <img width="100px" ng-if="item.frameData" ng-src="data:image/JPEG;base64,{{item.frameData}}">
+                                    <span ng-bind="item.timestamp"></span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div data-split-pane-divider data-width="5px"></div>
+        <div data-split-pane-component data-width="20em" class="bg-light">
+            <ng-view></ng-view>
+        </div>
+    </div>
+</div>
+
+<toaster-container></toaster-container>
+</body>
+</html>
