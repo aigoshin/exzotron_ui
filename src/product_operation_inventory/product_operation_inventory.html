@@ -1,0 +1,52 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th ts-criteria="id" scope="col" class="align-middle border-0" translate>ID</th>
+            <th ts-criteria="status" scope="col" class="align-middle border-0" translate>STATUS</th>
+            <th ts-criteria="dateTime" ts-default scope="col" class="align-middle border-0" translate>DATE</th>
+            <th ts-criteria="storehouseName" scope="col" class="align-middle border-0" translate>STOREHOUSE</th>
+            <th ts-criteria="balanceSheet" scope="col" class="align-middle border-0" translate>BALANCE_SHEET</th>
+            <th ts-criteria="actualBalance" scope="col" class="align-middle border-0" translate>ACTUAL_BALANCE</th>
+            <th ts-criteria="residualDeviation" scope="col" class="align-middle border-0" translate>RESIDUAL_DEVIATION</th>
+            <th ts-criteria="comment" scope="col" class="align-middle border-0" translate>COMMENT</th>
+            <th></th>
+        </tr>
+        <tbody>
+        <tr ng-repeat="item in items | filter: search" ts-repeat>
+            <td class="align-middle">
+                <span ng-bind="item.id"></span>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input  ng-true-value="1" ng-false-value="0" type="checkbox" ng-model="item.status" ng-click="$event.stopPropagation()" ng-change="changeStatus(item)">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.dateTime | date:'medium'"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.storehouseName"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.balanceSheet|number:2"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.actualBalance|number:2"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.residualDeviation|number:2"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.comment"></span>
+            </td>
+            <td class="align-middle width-25"><i ng-if="item.status==0" role="button" class="bi bi-trash" ng-click="$event.stopPropagation();delete(item)"></i></td>
+        </tr>
+        <tr>
+            <td colspan="9" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-click="add()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

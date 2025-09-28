@@ -1,0 +1,32 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <div class="p-2">
+        <div class="form-check form-check-inline">
+            <input type="text" ng-model="ui.rfidSearch" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+        </div>
+    </div>
+    <table rz-table rz-model="rfidObjectsTable" id="rfid_objects_enrol_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th class="pl-4" id="rfid_object_enrol_rfid"><span class="bi bi-gear mr-1" column-chooser="rfid_objects_enrol_table" fire="{{ui.selectedRfidObjects}}"></span><span ts-criteria="rfid" translate>RFID</span></th>
+            <th id="rfid_object_enrol_name"><span ts-criteria="name" translate>NAME</span></th>
+            <th id="rfid_object_enrol_status"><span ts-criteria="status" translate>STATUS</span></th>
+            <th id="rfid_object_enrol_type"><span ts-criteria="typeName" translate>TYPE</span></th>
+            <th id="rfid_object_contractor"><span ts-criteria="partnerName" translate="CONTRACTOR"></span></th>
+            <th class="resize-disabled" id="rfid_object_enrol_balance"><span ts-criteria="balance|parseFloat" translate>BALANCE</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in rfidObjects | filter: ui.rfidSearch" ts-repeat
+            ng-click="clickRfidObjectEnrol(item)" ng-class="selectedRfidObjectEnrol.rfid === item.rfid ? 'badge-secondary' : ''">
+            <td ng-bind="item.rfid"></td>
+            <td ng-bind="item.name"></td>
+            <td class="p-0">
+                <i class="h5 b" ng-class="statusClass(item.status)"></i>
+            </td>
+            <td ng-bind="item.typeName"></td>
+            <td ng-bind="item.partnerName"></td>
+            <td ng-bind="item.balance|number:2"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

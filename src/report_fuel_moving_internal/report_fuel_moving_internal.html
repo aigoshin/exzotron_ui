@@ -1,0 +1,74 @@
+<div class="bg-light">
+    <div class="A4 mt-5 shadow album" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+<!--            <button class="btn btn-sm btn-info" ng-click="exportPdf()"><i class="bi bi-file-earmark-pdf"></i></button>-->
+        </div>
+        <div>
+            <table class="w-100 table border-right border-left">
+                <thead>
+                <tr>
+                    <td colspan="9">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_INTERNAL"></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                </thead>
+            </table>
+            <table class="w-100 table table-bordered border-dark"  ng-repeat="(key, value) in items">
+                <thead>
+                <tr>
+                    <td translate="DIVISION"></td>
+                    <td colspan="9">
+                        <span ng-if="value[0].divisionName" class="font-weight-bold" ng-bind="value[0].divisionName"></span>
+                        <span ng-if="!value[0].divisionName"></span>
+                    </td>
+                </tr>
+                <tr class="headers">
+                    <th class="col" id="storehouse_name"><span translate="NAME"></span></th>
+                    <th class="col" id="tank_start"><span translate="LEVEL_REMAINS"></span></th>
+                    <th class="col" id="distributor"><span translate="DISTRIBUTOR"></span></th>
+                    <th class="col" id="internal_debit"><span translate="INTERNAL_DEBIT"></span></th>
+                    <th class="col" id="inventory"><span translate="INVENTORY"></span></th>
+                    <th class="col" id="total_debit"><span translate="INCOME"></span></th>
+                    <th class="col" id="vehicle_consumption"><span translate="VEHICLE_CONSUMPTION"></span></th>
+                    <th class="col" id="internal_credit"><span translate="INTERNAL_CREDIT"></span></th>
+                    <th class="col" id="total_credit"><span translate="CONSUMPTION"></span></th>
+                    <th class="col" id="tank_end"><span translate="LEVEL_FINAL"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in value">
+                    <td class="align-middle" ng-bind="item.storehouseName"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="item.tankStart | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="item.distributor | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="item.internalDebit | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="item.inventory | number:2"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="item.totalDebit | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="item.vehicleConsumption | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="item.internalCredit | number:2"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="item.totalCredit | number:2"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="item.tankEnd | number:2"></td>
+                </tr>
+                <tr ng-if="$last" class="table-secondary">
+                    <td class="align-middle font-weight-bold" ng-bind="companyTotals.storehouseName"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="companyTotals.tankStart | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="companyTotals.distributor | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="companyTotals.internalDebit | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="companyTotals.inventory | number:2"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="companyTotals.totalDebit | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="companyTotals.vehicleConsumption | number:2"></td>
+                    <td class="align-middle text-right" ng-bind="companyTotals.internalCredit | number:2"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="companyTotals.totalCredit | number:2"></td>
+                    <td class="align-middle text-right font-weight-bold" ng-bind="companyTotals.tankEnd | number:2"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

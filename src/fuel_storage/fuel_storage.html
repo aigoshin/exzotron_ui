@@ -1,0 +1,67 @@
+<div class="container-fluid mt-3 fuel-storage">
+    <div class="row" ng-class="selectedTank?'row-cols-md-1':'row-cols-md-3'">
+        <div class="col mb-4 card-wrapper fixed-card" style="width: 300px"
+             ng-repeat="tank in tanks | orderBy:'tankName'"
+             ng-if="showFullSizeChart(tank)">
+            <div class="card h-100 shadow">
+                <div class="row no-gutters" ng-if="grouped">
+                    <div class="col-md-4 my-auto">
+                        <div class="tank-circle mx-auto shadow">
+                            <div class="position-absolute tank-pct" ng-bind="(tank.levelPct | number: 2 )+ '%'"></div>
+                            <div class="volume" ng-style="{height:100-tank.levelPct + '%'}"></div>
+                            <div class="volume" ng-style="{height:tank.levelPct + '%'}"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <table class="table table-borderless account-operations-table">
+                                <tbody>
+                                <tr>
+                                    <td><span translate>NAME</span></td>
+                                    <td><span style="font-weight: 700;font-size: 12px" ng-bind="tank.tankName"></span></td>
+                                </tr>
+                                <tr ng-if="byNodes">
+                                    <td><span translate>DATE</span></td>
+                                    <td><span ng-bind="tank.dateTime | date:'medium'"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span translate>LEVEL</span></td>
+                                    <td><span ng-bind="tank.level | number : 2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span ng-show="!byNodes" translate>TEMPERATURE</span></td>
+                                    <td><span ng-show="!byNodes" ng-bind="tank.temperature | number : 2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span ng-show="!byNodes" translate>DENSITY</span></td>
+                                    <td><span ng-show="!byNodes" ng-bind="tank.density | number : 2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span ng-show="!byNodes" translate>WEIGHT</span></td>
+                                    <td><span ng-show="!byNodes" ng-bind="tank.weight | number : 2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span ng-show="!byNodes" translate>LEVEL_CM</span></td>
+                                    <td><span ng-show="!byNodes" ng-bind="tank.water | number : 2"></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters" ng-if="!grouped">
+                    <div class="col-md-12" element-size id="chartPane">
+                        <h5 ng-bind="tank.tankName" class="text-center mt-3"></h5>
+                        <div class="card-body charts-preview">
+                            <div class="chart-container">
+                                <div ng-init="drawChart('chartdiv' + tank.id, tank.id,  tank.data)" class="chartdiv"
+                                     id="{{'chartdiv' + tank.id}}"
+                                     ng-style="{height:(selectedTank?'80vh':'200px')}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h5 class="text-center mt-2" translate="EXPIRED_LICENSE_BODY"></h5>
+</div>
+<div class="modal-body pt-4 pb-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 width-300 overflow-auto" style="max-height: 300px">
+                <table class="table table-fit table-sm account-operations-table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th translate="NAME"></th>
+                        <th>IMEI</th>
+                        <th translate="LICENSE_DATE"></th>
+                        <th translate="EXPIRED"></th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="item in items">
+                        <td ng-bind="item.name"></td>
+                        <td ng-bind="item.imei"></td>
+                        <td ng-bind="item.licenseDate"></td>
+                        <td ng-bind="dateDiff(item.licenseDate)"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="cancel()">
+        <i role="button" class="bi bi-check"></i>
+    </button>
+</div>

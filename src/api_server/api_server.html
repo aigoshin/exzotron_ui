@@ -1,0 +1,176 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th ts-criteria="name" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="address" scope="col" class="align-middle border-0" translate>ADDRESS</th>
+            <th ts-criteria="typeName" scope="col" class="align-middle border-0" translate>TYPE</th>
+            <th ts-criteria="port" scope="col" class="align-middle border-0" translate>PORT</th>
+            <th ts-criteria="login" scope="col" class="align-middle border-0" translate>LOGIN</th>
+            <th ts-criteria="password" scope="col" class="align-middle border-0" translate>PASSWORD</th>
+            <th ts-criteria="token" scope="col" class="align-middle border-0" translate>TOKEN</th>
+            <th ts-criteria="apiCompanyId" scope="col" class="align-middle border-0" translate>API_COMPANY_ID</th>
+            <th ts-criteria="timezone" scope="col" class="align-middle border-0" translate>TIMEZONE</th>
+            <th ts-criteria="fuelPeriod" scope="col" class="align-middle border-0" translate>FUEL_PERIOD</th>
+            <th ts-criteria="countPeriod" scope="col" class="align-middle border-0" translate>COUNT_PERIOD</th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in apiServers | filter: search" ts-repeat ng-click="setCurrentServer(item)">
+            <td class="align-middle">
+                <span ng-bind="item.name" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.address" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.address">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.typeName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.typeId">
+                        <option ng-repeat="type in types" ng-value="type.id">{{type.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.port" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="number" class="form-control form-control-sm" ng-model="selectedItem.port">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.login" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.login">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="'***'" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.password">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.token" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.token">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.apiCompanyId" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.apiCompanyId">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.timezone" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input maxlength="12" type="number" class="form-control form-control-sm" ng-model="selectedItem.timezone">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.fuelPeriod" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input maxlength="12" type="number" class="form-control form-control-sm" ng-model="selectedItem.fuelPeriod">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.countPeriod" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input maxlength="12" type="number" class="form-control form-control-sm" ng-model="selectedItem.countPeriod">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="checkbox" ng-model="item.active" ng-click="$event.stopPropagation()" ng-change="setActive(item)">
+                </div>
+            </td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25">
+                <span ng-if="item.testInProgress" class="position-relative d-block" style="bottom: 2px" us-spinner="{width:0.7}" spinner-key="item.id" spinner-start-active="true"></span>
+                <i ng-if="!item.testInProgress" role="button"  tooltip-append-to-body="true" ng-class="!item.testInProgress && item.connectionSuccess === undefined?'bi bi-arrow-repeat':(item.connectionSuccess ? 'bi bi-check text-success' : 'bi bi-x text-danger')" uib-tooltip="{{'TEST_CONNECTION'|translate}}" ng-click="$event.stopPropagation();testConnection(item)"></i>
+            </td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" ng-class="item.id == currentServer.id ? 'bi bi-star-fill' : 'bi  bi-star'"></i></td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="edit(item)"></i></td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="delete(item)"></i></td>
+            <td ng-show="selectedItem.id == item.id" colspan="4" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newItem.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="250" type="text" class="form-control form-control-sm" ng-model="newItem.address">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.typeId">
+                        <option ng-repeat="type in types" ng-value="type.id">{{type.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="250" type="number" class="form-control form-control-sm" ng-model="newItem.port">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="250" type="text" class="form-control form-control-sm" ng-model="newItem.login">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="250" type="text" class="form-control form-control-sm" ng-model="newItem.password">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="250" type="text" class="form-control form-control-sm" ng-model="newItem.token">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="250" type="text" class="form-control form-control-sm" ng-model="newItem.apiCompanyId">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="12" type="number" class="form-control form-control-sm" ng-model="newItem.timezone">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="20" type="number" class="form-control form-control-sm" ng-model="newItem.fuelPeriod">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="20" type="number" class="form-control form-control-sm" ng-model="newItem.countPeriod">
+                </div>
+            </td>
+            <td colspan="5" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newItem.name||!newItem.address" ng-click="add()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

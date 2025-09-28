@@ -1,0 +1,64 @@
+<div class="bg-light">
+    <div class="A4 mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+        </div>
+        <div>
+            <table class="w-100 table table-bordered border-dark" ng-repeat="(key, value) in items">
+                <thead>
+                <tr>
+                    <td colspan="5">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_BY_DIVISION" translate-values='{item: "{{value[0].divisionName}}"}'></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                            <div translate="PRODUCT_TYPE" translate-values='{item: "{{value[0].productName}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col" class="align-middle">ID</th>
+                    <th scope="col" class="align-middle w-25" translate>DATE</th>
+                    <th scope="col" class="align-middle w-25" translate>OBJECT</th>
+                    <th scope="col" class="align-middle w-25" translate>NAME</th>
+                    <th scope="col" class="align-middle w-25" translate>COUNT</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[0].dateTime.split(' ')[0]">
+                </tr>
+                <tr ng-repeat-start="item in value" ng-if="!item.additional" ng-class="item.totals || items.additional ?'bg-info border-info':''">
+                    <td class="align-middle" ng-bind="item.id"></td>
+                    <td class="align-middle" ng-bind="item.totals?'Итого:': formatDate(item.dateTime, 'YYYY-MM-DD HH:mm')"></td>
+                    <td class="align-middle" ng-bind="item.objectName"></td>
+                    <td class="align-middle" ng-bind="item.rfidName1"></td>
+                    <td class="align-middle" ng-bind="-item.quantity | number:2"></td>
+                </tr>
+                <tr ng-if="addSpacing(item, value[$index+1])" ng-repeat-end>
+                    <td class="p-0" colspan="5">
+                        <table class="w-100">
+                            <tr ng-if="dateMap[value[item.additional?$index-1:$index].divisionId+value[item.additional?$index-1:$index].dateTime.split(' ')[0]] && !isSameDate(reportDateTo, reportDateFrom)">
+                                <td colspan="5" class="days-totals-td" ng-bind="'Итого за день: ' + (dateMap[value[item.additional?$index-1:$index].divisionId+value[item.additional?$index-1:$index].dateTime.split(' ')[0]] | number:2)"></td>
+                            </tr>
+                            <tr ng-if="value[$index+1].dateTime && !isSameDate(reportDateTo, reportDateFrom)">
+                                <td colspan="5" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[$index+1].dateTime.split(' ')[0]">
+                            </tr>
+                            <tr ng-if="item.additional">
+                                <td colspan="5" class="days-totals-td" ng-bind="'Итого за период: ' + (-counterMap[key].quantity | number:2)"></td>
+                            </tr>
+<!--                            <tr ng-if="item.additional">-->
+<!--                                <td class="align-middle" ng-bind="totalTankStartLabel + ': ' + (item.tankStart)"></td>-->
+<!--                                <td class="align-middle" ng-bind="totalTankEndLabel + ': ' + (item.tankEnd)"></td>-->
+<!--                                <td class="align-middle" ng-bind="totalTankLabel + ': ' + (item.tank)"></td>-->
+<!--                            </tr>-->
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

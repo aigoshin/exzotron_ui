@@ -1,0 +1,132 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle border-0"><span class="bi bi-gear mr-1"></span>#</th>
+            <th ts-criteria="trailerId" ts-default scope="col" class="align-middle border-0" translate>ID</th>
+            <th ts-criteria="registrationNumber" scope="col" class="align-middle border-0" translate>LICENSE_PLATE</th>
+            <th ts-criteria="name" scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="model" scope="col" class="align-middle border-0" translate>MODEL</th>
+            <th ts-criteria="emptyWeightKg" scope="col" class="align-middle border-0" translate>EMPTY_WEIGHT</th>
+            <th ts-criteria="widthMm" scope="col" class="align-middle border-0" translate>WIDTH</th>
+            <th ts-criteria="garageNumber" scope="col" class="align-middle border-0" translate>GARAGE_NUMBER</th>
+            <th ts-criteria="divisionName" scope="col" class="align-middle border-0" translate>DIVISION</th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in trailers | filter: search" ts-repeat ng-click="setCurrentTrailer(item)"
+            ng-class="item.trailerId == currentTrailer.trailerId ? 'badge-secondary' : ''">
+            <td class="align-middle width-10" ng-bind="$index+1"></td>
+            <td class="align-middle width-10" ng-bind="item.trailerId"></td>
+            <td class="align-middle">
+                <span ng-bind="item.registrationNumber" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <input type="text" maxlength="20" class="form-control form-control-sm" ng-model="selectedItem.registrationNumber">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.name" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <input type="text" maxlength="100" class="form-control form-control-sm" ng-model="selectedItem.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.model" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <input type="text" maxlength="100" class="form-control form-control-sm" ng-model="selectedItem.model">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.emptyWeightKg | number:2" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <input type="number" step="0.01" class="form-control form-control-sm" ng-model="selectedItem.emptyWeightKg">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.widthMm" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <input type="number" class="form-control form-control-sm" ng-model="selectedItem.widthMm">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.garageNumber" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <input type="text" maxlength="20" class="form-control form-control-sm" ng-model="selectedItem.garageNumber">
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.divisionName" ng-show="selectedItem.trailerId != item.trailerId"></span>
+                <div class="input-group" ng-show="selectedItem.trailerId == item.trailerId">
+                    <select class="form-control form-control-sm" ng-model="selectedItem.divisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td ng-show="selectedItem.trailerId != item.trailerId" class="align-middle width-25">
+                <i role="button" ng-class="item.trailerId == currentTrailer.trailerId ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+            </td>
+            <td ng-show="selectedItem.trailerId != item.trailerId" class="align-middle width-25">
+                <i role="button" class="bi bi-pencil" ng-click="edit(item)"></i>
+            </td>
+            <td ng-show="selectedItem.trailerId != item.trailerId" class="align-middle width-25">
+                <i role="button" class="bi bi-trash" ng-click="delete(item)"></i>
+            </td>
+            <td ng-show="selectedItem.trailerId == item.trailerId" colspan="3" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="20" type="text" class="form-control form-control-sm" ng-model="newItem.registrationNumber">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newItem.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newItem.model">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="number" step="0.01" class="form-control form-control-sm" ng-model="newItem.emptyWeightKg">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" ng-model="newItem.widthMm">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="20" type="text" class="form-control form-control-sm" ng-model="newItem.garageNumber">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select class="form-control form-control-sm" ng-model="newItem.divisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td colspan="3" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newItem.registrationNumber || !newItem.name" ng-click="add()">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,257 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <div class="p-2">
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showChartsByNodes()" type="checkbox" ng-model="ui.showChartsByNodes" id="showChartsByNodes">
+                <label class="form-check-label custom-control-label" for="showChartsByNodes" translate>GROUP_BY_OBJECTS</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showTankCharts()" type="checkbox" ng-model="ui.showTankCharts" id="showTankCharts">
+                <label class="form-check-label custom-control-label" for="showTankCharts" translate>CHARTS</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showTankCharts">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showLevelLine()" type="checkbox" ng-model="ui.showLevelLine" id="showLevelLine">
+                <label class="form-check-label custom-control-label" for="showLevelLine" translate>LEVEL</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showTankCharts && !ui.showChartsByNodes">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showTemperatureLine()" type="checkbox" ng-model="ui.showTemperatureLine" id="showTemperatureLine">
+                <label class="form-check-label custom-control-label" for="showTemperatureLine" translate>TEMPERATURE</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showTankCharts && !ui.showChartsByNodes">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showDensityLine()" type="checkbox" ng-model="ui.showDensityLine" id="showDensityLine">
+                <label class="form-check-label custom-control-label" for="showDensityLine" translate>DENSITY</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showTankCharts && !ui.showChartsByNodes">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showWeightLine()" type="checkbox" ng-model="ui.showWeightLine" id="showWeightLine">
+                <label class="form-check-label custom-control-label" for="showWeightLine" translate>WEIGHT</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showTankCharts && !ui.showChartsByNodes">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showWaterLine()" type="checkbox" ng-model="ui.showWaterLine" id="showWaterLine">
+                <label class="form-check-label custom-control-label" for="showWaterLine" translate>LEVEL_CM</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showTankCharts && ui.showChartsByNodes">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showConsumptionLine()" type="checkbox" ng-model="ui.showConsumptionLine" id="showConsumptionLine">
+                <label class="form-check-label custom-control-label" for="showConsumptionLine" translate>CONSUMPTION</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" ng-show="ui.showChartsByNodes">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="showChartLineByRemains()" type="checkbox" ng-model="ui.showChartLineByRemains" id="showChartLineByRemains">
+                <label class="form-check-label custom-control-label" for="showChartLineByRemains" translate>BY_REMAINS</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline">
+            <button class="btn btn-sm btn-success" ng-click="applyTankLogs()" translate><i class="bi bi-check"></i></button>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <div class="input-group input-group-sm" ng-show="!intervalStarted">
+                <div class="input-group-prepend">
+                    <button class="btn btn-success" type="button" id="button-addon1" ng-click="startInterval()" >Начать</button>
+                </div>
+                <input type="number" min="10" class="form-control width-75" placeholder="Секунды" aria-label="Секунды" aria-describedby="button-addon1" ng-model="ui.intervalSeconds">
+            </div>
+            <button class="btn btn-sm btn-secondary" type="button" ng-click="stopInterval()" ng-show="intervalStarted">Завершить</button>
+        </div>
+    </div>
+    <table ng-if="!ui.showChartsByNodes" rz-table id="tanksTable" rz-save="true" ng-model="tanksTable" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr ng-show="!ui.showChartsByNodes">
+            <th class="col width-25 rz-hide"></th>
+            <th class="col ml-1" id="tank_name"><span ts-criteria="tankName|trim" ts-default translate>NAME</span></th>
+            <th class="col" id="tank_level"><span ts-criteria="level|parseFloat" translate>LEVEL</span></th>
+            <th class="col" id="tank_temperature"><span ts-criteria="temperature|parseFloat" translate>TEMPERATURE</span></th>
+            <th class="col" id="tank_density"><span ts-criteria="density|parseFloat" translate>DENSITY</span></th>
+            <th class="col" id="tank_weight"><span ts-criteria="weight|parseFloat" translate>WEIGHT</span></th>
+            <th class="col" id="tank_water"><span ts-criteria="water|parseFloat" translate>LEVEL_CM</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="tank in tanks" ts-repeat ng-click="selectTank(tank)" ng-class="selectedTank && selectedTank.tankId == tank.tankId?'badge-secondary':''">
+            <td class="pl-1 width-25">
+                <div class="form-check form-check-inline checkbox-sm">
+                    <div class="custom-control custom-checkbox p-0">
+                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedTanks" checklist-value="tank.tankId" id={{tank.tankId+'tank'}}>
+                        <label class="form-check-label custom-control-label" for={{tank.tankId+'tank'}}></label>
+                    </div>
+                </div>
+            </td>
+            <td class="ml-1" ng-bind="tank.tankName"></td>
+            <td ng-bind="tank.level | number : 2"></td>
+            <td ng-bind="tank.temperature | number : 2"></td>
+            <td ng-bind="tank.density | number : 2"></td>
+            <td ng-bind="tank.weight | number : 2"></td>
+            <td ng-bind="tank.water | number : 2"></td>
+        </tr>
+        <tr ng-show="!ui.showChartsByNodes" class="badge-dark">
+            <td></td>
+            <td><span class="ml-1" translate>TOTALS</span>:</td>
+            <td ng-bind="(totalLevel | number : 2)+' / '+(totalVolume | number : 2)"></td>
+            <td><span class="ml-1" translate>FREE</span>:</td>
+            <td colspan="3" ng-bind="(totalVolume-totalLevel) | number : 2"></td>
+        </tr>
+        </tbody>
+    </table>
+    <table ng-if="ui.showChartsByNodes" rz-table rz-save="true" id="tanksByNodesTable" ng-model="tanksByNodesTable" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th class="col width-25 rz-hide"></th>
+            <th class="col ml-1" id="storehouse_name"><span ts-criteria="tankName|trim" ts-default translate>NAME</span></th>
+            <th class="col" id="storehouse_volume"><span ts-criteria="tankVolume|parseFloat" translate>VOLUME</span></th>
+            <th class="col" id="storehouse_level_min"><span ts-criteria="levelMin|parseFloat" translate>LEVEL_START</span></th>
+            <th class="col" id="input"><span ts-criteria="input|parseFloat" translate>INCOME</span></th>
+            <th class="col" id="quantity"><span ts-criteria="quantity|parseFloat" translate>CONSUMPTION</span></th>
+            <th class="col" id="final_counter"><span translate>FINAL_COUNTER</span></th>
+            <th class="col" id="storehouse_level"><span ts-criteria="level|parseFloat" translate>TANK</span></th>
+            <th class="col" id="deviation"><span translate>DEVIATION</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="tank in tanks" ts-repeat ng-click="selectTank(tank)" ng-class="selectedTank && selectedTank.tankId == tank.tankId?'badge-secondary':''">
+            <td class="pl-1 width-25" ng-click="$event.stopPropagation()">
+                <div class="form-check form-check-inline checkbox-sm">
+                    <div class="custom-control custom-checkbox p-0">
+                        <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedTanks" checklist-value="tank.storehouseId" id={{tank.tankId+'node'}}>
+                        <label class="form-check-label custom-control-label" for={{tank.tankId+'node'}}></label>
+                    </div>
+                </div>
+            </td>
+            <!--                            <td class="pl-1 width-25">-->
+            <!--                                <div class="custom-control custom-radio custom-control-inline" ng-click="selectTankId(tank.tankId)">-->
+            <!--                                    <input ng-value="tank.tankId" type="radio" id="{{tank.tankId+'node'}}" name="selected_tank_id" class="custom-control-input">-->
+            <!--                                    <label class="custom-control-label" for="{{tank.tankId+'node'}}" translate></label>-->
+            <!--                                </div>-->
+            <!--                            </td>                            -->
+            <td ng-bind="tank.tankName"></td>
+            <td ng-bind="tank.tankVolume | number : 2"></td>
+            <td ng-bind="tank.levelMin | number : 2"></td>
+            <td ng-bind="tank.input | number : 2"></td>
+            <td ng-bind="-tank.quantity | number : 2"></td>
+            <td ng-bind="tank.levelMin + tank.input + tank.quantity | number : 2"></td>
+            <td><span ng-show="!tank.sensorExists" ng-bind="tank.level | number : 2"></span></td>
+            <td><span ng-show="!tank.sensorExists" ng-bind="tank.level - (tank.levelMin + tank.input + tank.quantity) | number : 2"></span></td>
+        </tr>
+        <tr ng-show="ui.showChartsByNodes" class="badge-dark">
+            <td></td>
+            <td><span class="ml-1" translate>TOTALS</span>:</td>
+            <td ng-bind="totalVolume | number : 2"></td>
+            <td ng-bind="totalLevelMin | number : 2"></td>
+            <td ng-bind="totalInput | number : 2"></td>
+            <td ng-bind="-totalQuantity | number : 2"></td>
+            <td ng-bind="totalLevelMin + totalInput + totalQuantity | number : 2"></td>
+            <td><span ng-show="someTankSensorExist" ng-bind="totalLevel | number : 2"></span></td>
+            <td><span ng-show="someTankSensorExist" ng-bind="totalLevel - (totalLevelMin + totalInput + totalQuantity) | number : 2"></span></td>
+        </tr>
+        </tbody>
+    </table>
+    <table ng-if="incomeLog.length" rz-table rz-save="true" id="incomeLogFuelStorageTable" ng-model="incomeLogFuelStorageTable" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th class="col ml-1" id="income_doc_date"><span ts-criteria="docDate" ts-default translate>DATE</span></th>
+            <th class="col" id="income_supplier_name"><span ts-criteria="supplierName" translate>SUPPLIER</span></th>
+            <th class="col" id="income_litres_doc"><span ts-criteria="litresCounterDoc" translate>LITRES_COUNTER_DOC</span></th>
+            <th class="col" id="income_litres_in"><span ts-criteria="litresCounterIn" translate>LITRES_COUNTER_IN</span></th>
+            <th class="col" id="income_litres_dev"><span ts-criteria="litresCounterDeviation" translate>LITRES_COUNTER_DEVIATION</span></th>
+            <th class="col" id="last"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in incomeLog">
+            <td ng-bind="item.docDate"></td>
+            <td ng-bind="item.supplierName"></td>
+            <td>
+                                <span ng-if="!inputsMap.litresCounterDoc" ng-bind="item.litresCounterDoc | number : 2"
+                                      ng-click="showInput('litresCounterDoc', true, item, $event)" class=pointer></span>
+                <input ng-if="inputsMap.litresCounterDoc" ng-model="item.litresCounterDoc"
+                       focus-me="inputsMap.litresCounterDoc"
+                       ng-click="$event.stopPropagation()" class="form-control form-control-sm"
+                       ng-blur="showInput('litresCounterDoc', false, item, $event);saveLog(item)">
+            </td>
+            <td ng-bind="item.litresCounterIn | number : 2"></td>
+            <td ng-bind="-item.litresCounterDeviation | number : 2"></td>
+            <td>
+                <div class="input-group">
+                    <input  ng-true-value="1" ng-false-value="0" type="checkbox" ng-model="item.status" ng-disabled="true">
+                </div>
+            </td>
+        </tr>
+        <tr class="badge-dark">
+            <td></td>
+            <td><span class="ml-1" translate>TOTALS</span>:</td>
+            <td ng-bind="totalCounterDoc | number : 2"></td>
+            <td ng-bind="totalCounterIn | number : 2"></td>
+            <td colspan="2" ng-bind="-totalCounterDeviation | number : 2"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="p-2" ng-show="ui.showChartsByNodes">
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="toggleReportByLog()" type="checkbox" ng-model="ui.showReportByLog" id="showReportByLog">
+                <label class="form-check-label custom-control-label" for="showReportByLog" translate>BY_REMAINS_DETAILED</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline">
+            <button class="btn btn-sm btn-success" ng-if="detailedReportItems.length" ng-click="exportExcelDetailedReport()" translate><i class="bi bi-file-spreadsheet"></i></button>
+        </div>
+    </div>
+    <table class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ng-if="!ui.showReportByLog">
+        <thead class="thead-dark">
+        <tr>
+            <th class="col w-20"><span translate="DATE"></span></th>
+            <th class="col w-10"><span translate="TYPE"></span></th>
+            <th class="col w-10"><span translate="OPERATION_ID"></span></th>
+            <th class="col w-10"><span translate="INCOME"></span></th>
+            <th class="col w-10"><span translate="CONSUMPTION"></span></th>
+            <th class="col w-15"><span translate="FINAL_COUNTER"></span></th>
+            <th class="col"><span translate="TANK"></span></th>
+            <th class="col"><span translate="DEVIATION"></span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="tank in detailedReportItems" ng-click="selectDetailedReportItem(tank)">
+            <td ng-bind="tank.dateTime"></td>
+            <td ng-bind="tank.docTypeName"></td>
+            <td ng-bind="tank.operationLogId"></td>
+            <td class="text-right" ng-bind="tank.debit | number : 2"></td>
+            <td class="text-right" ng-bind="tank.credit | number : 2"></td>
+            <td class="text-right" ng-bind="tank.count | number : 2"></td>
+            <td class="text-right" ng-bind="tank.factCapacity | number : 2"></td>
+            <td class="text-right"
+                ng-bind="(tank.count != null && tank.factCapacity != null?(tank.factCapacity-tank.count| number : 2):'') "></td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ng-if="ui.showReportByLog">
+        <thead class="thead-dark">
+        <tr>
+            <th class="col w-20"><span translate="DATE"></span></th>
+            <th class="col w-20"><span translate="LEVEL"></span></th>
+            <th class="col" ng-repeat="tankColumn in tankColumns" ng-bind="tankColumn.field"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="tank in detailedReportItems">
+            <td ng-bind="tank.date_time | date:'dd.MM.yyyy HH:mm:ss'"></td>
+            <td ng-bind="tank.total_liters"></td>
+            <td class="width-50" ng-repeat="tankColumn in tankColumns" ng-bind="tank[tankColumn.field] | number:2"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,64 @@
+<form novalidate name="addInventoryForm" ng-submit="ok(addInventoryForm)">
+    <div class="modal-body pt-4 pb-4">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="date_time" translate>DATE</label>
+                <div class="dropdown">
+                    <b id="dropdown" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        <div class="input-group input-group-sm" ng-click="showDropdown=!showDropdown">
+                            <input id="date_time" type="text" class="form-control" data-ng-model="item.dateTime">
+                            <div class="input-group-append input-group-sm">
+                                <span class="input-group-text" id="basic-addon2"><i class="bi bi-calendar"></i></span>
+                            </div>
+                        </div>
+                    </b>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':showDropdown}">
+                        <datetimepicker data-ng-model="item.dateTime"
+                                        data-on-set-time="onTimeSet(newDate, oldDate)"
+                                        data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="storehouse" translate>STOREHOUSE</label>
+                <select ng-class="{'is-invalid':(addInventoryForm.storehouse.$error.required)  && (addInventoryForm.storehouse.$touched || addInventoryForm.$submitted)}"
+                        type="text" ng-required="true" id="storehouse" name="storehouse" class="form-control form-control-sm" ng-model="item.storehouseId" ng-change="getBalance()">
+                    <option ng-repeat="storehouse in storehouses" ng-value="storehouse.id">{{storehouse.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row" ng-if="balance">
+            <div class="form-group col-md-4">
+                <label for="actual_balance" translate>ACTUAL_BALANCE</label>
+                <input ng-class="{'is-invalid':(addInventoryForm.actual_balance.$error.required)  && (addInventoryForm.actual_balance.$touched || addInventoryForm.$submitted)}"
+                       ng-required="true" ng-model="item.actualBalance" type="number"
+                       class="form-control form-control-sm" id="actual_balance" name="actual_balance">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="balance" translate>BALANCE_SHEET</label>
+                <input ng-class="{'is-invalid':(addInventoryForm.balance.$error.required)  && (addInventoryForm.balance.$touched || addInventoryForm.$submitted)}"
+                       ng-required="true" ng-model="item.balanceSheet" type="number" disabled
+                       class="form-control form-control-sm" id="balance" name="balance">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="balance" translate>DEVIATION</label>
+                <input ng-model="item.residualDeviation" ng-value="item.actualBalance - item.balanceSheet" type="number" disabled
+                       class="form-control form-control-sm" id="deviation" name="deviation">
+            </div>
+        </div>
+        <div class="form-row" ng-if="balance">
+            <div class="form-group col-md-12">
+                <label for="comment" translate="COMMENT"></label>
+                <textarea class="form-control form-control-sm" id="comment" ng-model="item.comment"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">
+            <i role="button" class="bi bi-check"></i>
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">
+            <i role="button" class="bi bi-x"></i>
+        </button>
+    </div>
+</form>

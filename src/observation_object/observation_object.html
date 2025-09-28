@@ -1,0 +1,198 @@
+<div data-split-pane data-split-pane-properties="observationObjectSplitPaneProperties">
+    <div data-split-pane-component data-height="60%" class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="main-table-wrapper overflow-auto shadow table-responsive">
+                <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+                    <thead class="thead-dark">
+                    <tr>
+                        <th ts-criteria="id" scope="col" class="align-middle border-0" translate>ID</th>
+                        <th ts-criteria="name" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+                        <th ts-criteria="mac_address" scope="col" class="align-middle border-0">MAC</th>
+                        <th ts-criteria="division.name" scope="col" class="align-middle border-0" translate>DIVISION</th>
+                        <th ts-criteria="object.name" scope="col" class="align-middle border-0" translate>OBJECT</th>
+                        <th ts-criteria="cameraName" scope="col" class="align-middle border-0" translate>CAMERA_NAME</th>
+                        <th ts-criteria="exServerCamType" scope="col" class="align-middle border-0" translate>TYPE</th>
+                        <th ts-criteria="login" scope="col" class="align-middle border-0" translate>LOGIN</th>
+                        <th ts-criteria="password" scope="col" class="align-middle border-0" translate>PASSWORD</th>
+                        <th ts-criteria="ip" scope="col" class="align-middle border-0" translate>IP</th>
+                        <th ts-criteria="port" scope="col" class="align-middle border-0" translate>PORT</th>
+                        <th ts-criteria="lastFileProcessingDate" scope="col" class="align-middle border-0" translate>LAST_PROCESSING_DATE</th>
+                        <th ts-criteria="photoProcessingEnabled" scope="col" class="align-middle border-0" translate>PHOTO_PROCESSING_ENABLED</th>
+                        <th ts-criteria="videoProcessingEnabled" scope="col" class="align-middle border-0" translate>VIDEO_PROCESSING_ENABLED</th>
+                        <th ts-criteria="active" scope="col" class="align-middle border-0" translate>ACTIVE</th>
+                        <th ts-criteria="archiveStorageHours" scope="col" class="align-middle border-0" translate="STORAGE_HOURS"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in cameras | filter: search" ts-repeat
+                        ng-click="setCurrentCamera(item)"
+                        ng-class="currentCamera && item.id == currentCamera.id ? 'badge-secondary' : ''">
+                        <td class="align-middle width-25">
+                            <span ng-bind="item.id"></span>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.name" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.name">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.macAddress" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.macAddress">
+                            </div>
+                        </td>
+                        <td class="align-middle w-15">
+                            <span ng-bind="item.division.name" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <select type="text" class="form-control form-control-sm" ng-model="selectedCamera.division.id">
+                                    <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle w-15">
+                            <span ng-bind="item.exObject.name" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <select type="text" class="form-control form-control-sm" ng-model="selectedCamera.exObject.id">
+                                    <option ng-repeat="object in objects" ng-value="object.id">{{object.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.cameraName" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.cameraName">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.exServerCamType" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.exServerCamType">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.login" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.login">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.password" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.password">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.ip" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.ip">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.port" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedCamera.port">
+                            </div>
+                        </td>
+                        <td class="align-middle width-25">
+                            <span ng-bind="item.lastFileProcessingDate"></span>
+                        </td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input type="checkbox" ng-if="selectedCamera.id != item.id" disabled ng-model="item.photoProcessingEnabled" ng-click="$event.stopPropagation()">
+                                <input type="checkbox" ng-if="selectedCamera.id == item.id" ng-model="selectedCamera.photoProcessingEnabled" ng-click="$event.stopPropagation()">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input type="checkbox" ng-if="selectedCamera.id != item.id" disabled ng-model="item.videoProcessingEnabled" ng-click="$event.stopPropagation()">
+                                <input type="checkbox" ng-if="selectedCamera.id == item.id" ng-model="selectedCamera.videoProcessingEnabled" ng-click="$event.stopPropagation()">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input type="checkbox" ng-if="selectedCamera.id != item.id" disabled ng-model="item.active" ng-click="$event.stopPropagation()">
+                                <input type="checkbox" ng-if="selectedCamera.id == item.id" ng-model="selectedCamera.active" ng-click="$event.stopPropagation()">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.archiveStorageHours" ng-show="selectedCamera.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedCamera.id == item.id">
+                                <input type="number" class="form-control form-control-sm" ng-model="selectedCamera.archiveStorageHours">
+                            </div>
+                        </td>
+                        <td></td>
+                        <td ng-show="selectedCamera.id != item.id" class="align-middle width-25"><i role="button" ng-class="item.id == currentCamera.id ? 'bi bi-star-fill' : 'bi  bi-star'"></i>
+                        </td>
+                        <td ng-show="selectedCamera.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="$event.stopPropagation();edit(item)"></i>
+                        </td>
+                        <td ng-show="selectedCamera.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="$event.stopPropagation();delete(item)"></i>
+                        </td>
+                        <td ng-show="selectedCamera.id == item.id" colspan="3" class="align-middle">
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm" ng-click="$event.stopPropagation();save()"><i class="bi bi-check"></i></button>
+                                <button class="btn btn-danger btn-sm" ng-click="$event.stopPropagation();cancel()"><i class="bi bi-x"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newCamera.name">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input maxlength="250" type="text" class="form-control form-control-sm" ng-model="newCamera.macAddress">
+                            </div>
+                        </td>
+                        <td class="align-middle w-15">
+                            <div class="input-group">
+                                <select type="text" class="form-control form-control-sm" ng-model="newCamera.division.id">
+                                    <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle w-15">
+                            <div class="input-group">
+                                <select type="text" class="form-control form-control-sm" ng-model="newCamera.exObject.id">
+                                    <option ng-repeat="object in objects" ng-value="object.id">{{object.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td colspan="15" class="align-middle">
+                            <button class="btn btn-success btn-sm" ng-disabled="!newCamera.name || !newCamera.macAddress" ng-click="add()"><i class="bi bi-plus"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div data-split-pane-divider data-height="5px"></div>
+    <div data-split-pane-component class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+<!--            <button class="btn btn-danger" ng-click="connect()">Connect</button>-->
+<!--            <video id="video" controls autoplay></video>-->
+            <h4 ng-show="false" class="text-center">Нет фото</h4>
+            <div ng-show="cameraDataLast && cameraDataLast.length">
+                <div class="col col-12">
+                    <div class="d-flex flex-wrap">
+                        <div ng-repeat="photo in cameraDataLast" class="flex-shrink-0">
+                            <div ng-click="selectPhoto(photo)" style="cursor: pointer">
+                                <div><span class="font-weight-bold p-1" ng-bind="photo.camera.name"></span><span class="p-1" ng-bind="'('+photo.timestamp+')'"></span></div>
+                                <img ng-src="{{'data:image/png;base64,'+ photo.frameData}}"
+                                     class="rounded float-left img-thumbnail width-400">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

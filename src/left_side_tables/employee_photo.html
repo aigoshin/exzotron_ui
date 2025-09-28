@@ -1,0 +1,23 @@
+<div class="col object-rfid-balance-table-wrapper p-0" ng-show="selectedEmployee">
+    <div class="container-fluid">
+        <div class="row mt-1 mb-1">
+            <div class="col col-md-12">
+                <button class="btn btn-success w-100" translate="UPLOAD_PHOTO"
+                        type="file" ngf-keep="false" ngf-select="uploadEmployeePhoto($file)"
+                        ng-model="file" name="file">
+                </button>
+            </div>
+        </div>
+        <div ng-show="selectedEmployee.photo" class="row mb-1">
+            <div class="col col-12">
+                <div class="d-flex flex-wrap">
+                    <div class="flex-shrink-1">
+                        <div>
+                            <img ng-src="{{'data:image/png;base64,'+ selectedEmployee.photo}}" class="rounded float-left img-thumbnail p-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <div class="p-2">
+        <div class="form-check form-check-inline">
+            <button class="btn btn-sm btn-success" ng-click="showAddWeightOperationModal(null)"><i class="bi bi-plus"></i></button>
+        </div>
+    </div>
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th ts-criteria="name" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="location" scope="col" class="align-middle border-0" translate>LOCATION</th>
+            <th ts-criteria="routerImei" scope="col" class="align-middle border-0" translate>ROUTER_IMEI
+            </th>
+            <th ts-criteria="controllerIp" scope="col" class="align-middle border-0" translate>
+                CONTROLLER_IP
+            </th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in weightOperations | filter: search" ts-repeat ng-click="selectWeightOperation(item)"
+            ng-class="{'badge-secondary': item.weightbridgeId === selectedWeightOperation.weightbridgeId}">
+            <!-- Name Column -->
+            <td class="align-middle">
+                <div>
+                    {{item.name}}
+                </div>
+            </td>
+
+            <!-- Location Column -->
+            <td class="align-middle">
+                <div>
+                    {{item.location}}
+                </div>
+            </td>
+
+            <!-- Router IMEI Column -->
+            <td class="align-middle">
+                <div>
+                    {{item.routerImei}}
+                </div>
+            </td>
+
+            <!-- Controller IP Column -->
+            <td class="align-middle">
+                <div>
+                    {{item.controllerIp}}
+                </div>
+            </td>
+
+            <!-- Status Column -->
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="checkbox" ng-model="item.active" ng-click="$event.stopPropagation()"
+                           ng-change="setWeightOperationStatus(item)">
+                </div>
+            </td>
+
+            <td class="align-middle width-25">
+                <i role="button"
+                   ng-class="item.weightbridgeId == selectedWeightOperation.weightbridgeId ? 'bi bi-star-fill' : 'bi  bi-star'"></i>
+            </td>
+            <td class="align-middle width-25">
+                <i role="button" class="bi bi-pencil" ng-click="showAddWeightOperationModal(item);$event.stopPropagation()"></i>
+            </td>
+            <td class="align-middle width-25">
+                <i role="button" class="bi bi-trash" ng-click="deleteWeightOperation(item);$event.stopPropagation()"></i>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

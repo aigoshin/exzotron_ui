@@ -1,0 +1,153 @@
+<div class="col object-rfid-balance-table-wrapper">
+    <div class="form-group row m-1">
+        <label for=user_search class="col-form-label" translate="USER_LIST"></label>
+        <div class="col-sm-6">
+            <input type="text" id="user_search" ng-model="companyUsersSearch" class="form-control form-control-sm"
+                   placeholder="{{'SEARCH'|translate}}"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 p-0">
+            <table rz-table rz-model="userChatTable" id="user_chat_table"
+                   class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table"
+                   ts-wrapper>
+                <thead class="thead-dark">
+                <tr>
+                    <th class="col" id="name"><span ts-criteria="usersName|trim" translate>NAME</span></th>
+                    <th class="col" id="usersPhone"><span ts-criteria="usersPhone|trim" translate>PHONE</span></th>
+                    <th class="col" id="usersEmail"><span ts-criteria="usersEmail|trim" translate>EMAIL</span></th>
+                    <th class="col" id="telegram"><span ts-criteria="telegram|trim" translate>TELEGRAM</span></th>
+                    <th class="col rz-hide" id="telegram_name"><span ts-criteria="telegramName|trim" translate>@</span></th>
+                    <th class="col rz-hide width-75"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in companyUsers|filter:companyUsersSearch" ts-repeat
+                    ng-click="selectCurrentUser(user)"
+                    ng-class="ui.selectedUser.usersId==user.usersId?'badge-secondary':''">
+                    <td class="align-middle ml-1" ng-bind="showUserName(user)"></td>
+                    <td class="align-middle">
+                        <span ng-bind="user.usersPhone" ng-if="ui.selectedForEditUser.usersId != user.usersId"></span>
+                        <div class="input-group" ng-if="ui.selectedForEditUser.usersId == user.usersId">
+                            <input type="text" maxlength="50" class="form-control form-control-sm" ng-click="$event.stopPropagation();" ng-model="ui.selectedForEditUser.usersPhone">
+                        </div>
+                    </td>
+                    <td class="align-middle">
+                        <span ng-bind="user.usersEmail" ng-if="ui.selectedForEditUser.usersId != user.usersId"></span>
+                        <div class="input-group" ng-if="ui.selectedForEditUser.usersId == user.usersId">
+                            <input type="text" maxlength="50" class="form-control form-control-sm" ng-click="$event.stopPropagation();" ng-model="ui.selectedForEditUser.usersEmail">
+                        </div>
+                    </td>
+                    <td class="align-middle" ng-bind="user.telegram"></td>
+                    <td class="align-middle" ng-bind="user.telegramName"></td>
+                    <td class="align-middle" ng-if="ui.selectedForEditUser.usersId != user.usersId"><i role="button" class="bi bi-pencil" ng-click="$event.stopPropagation();editUser(user)"></i></td>
+                    <td ng-if="ui.selectedForEditUser.usersId == user.usersId" colspan="2" class="align-middle">
+                        <div class="float-right">
+                            <button class="btn btn-primary btn-sm" ng-click="$event.stopPropagation();saveUser(user)"><i class="bi bi-check"></i></button>
+                            <button class="btn btn-danger btn-sm" ng-click="$event.stopPropagation();cancelUser()"><i class="bi bi-x"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row chat-window" id="chat_window_1" ng-if="ui.selectedUser">
+        <div class="col-md-12 p-0">
+            <div class="panel panel-default">
+                <div class="panel-body msg_container_base bg-light" scroll-bottom="ui.userMessages">
+<!--                    <div class="row msg_container base_sent">-->
+<!--                        <div class="col-md-10 col-xs-10">-->
+<!--                            <div class="messages msg_sent">-->
+<!--                                <p>that mongodb thing looks good, huh?-->
+<!--                                    tiny master db, and huge document store</p>-->
+<!--                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-1 col-xs-1 avatar">-->
+<!--                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"-->
+<!--                                 class=" img-responsive ">-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="row msg_container" ng-class="msg.senderId==currentUser.telegram?'base_sent':'base_receive'" ng-repeat="msg in ui.userMessages">
+                        <div class="col-md-1 col-xs-1 avatar" ng-show="msg.senderId!=currentUser.telegram">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"
+                                 class=" img-responsive ">
+                        </div>
+                        <div class="col-md-10 col-xs-10">
+                            <div class="messages" ng-class="msg.senderId==currentUser.telegram?'msg_sent':'msg_receive'">
+                                <p ng-bind="msg.messageText"></p>
+                                <time ng-bind="msg.dateSent"></time>
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-xs-1 avatar" ng-show="msg.senderId==currentUser.telegram">
+                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"
+                                 class=" img-responsive">
+                        </div>
+                    </div>
+<!--                    <div class="row msg_container base_receive">-->
+<!--                        <div class="col-md-1 col-xs-1 avatar">-->
+<!--                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"-->
+<!--                                 class=" img-responsive ">-->
+<!--                        </div>-->
+<!--                        <div class="col-xs-10 col-md-10">-->
+<!--                            <div class="messages msg_receive">-->
+<!--                                <p>that mongodb thing looks good, huh?-->
+<!--                                    tiny master db, and huge document store</p>-->
+<!--                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="row msg_container base_sent">-->
+<!--                        <div class="col-xs-10 col-md-10">-->
+<!--                            <div class="messages msg_sent">-->
+<!--                                <p>that mongodb thing looks good, huh?-->
+<!--                                    tiny master db, and huge document store</p>-->
+<!--                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-1 col-xs-1 avatar">-->
+<!--                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"-->
+<!--                                 class=" img-responsive ">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="row msg_container base_receive">-->
+<!--                        <div class="col-md-1 col-xs-1 avatar">-->
+<!--                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"-->
+<!--                                 class=" img-responsive ">-->
+<!--                        </div>-->
+<!--                        <div class="col-xs-10 col-md-10">-->
+<!--                            <div class="messages msg_receive">-->
+<!--                                <p>that mongodb thing looks good, huh?-->
+<!--                                    tiny master db, and huge document store</p>-->
+<!--                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="row msg_container base_sent">-->
+<!--                        <div class="col-md-10 col-xs-10 ">-->
+<!--                            <div class="messages msg_sent">-->
+<!--                                <p>that mongodb thing looks good, huh?-->
+<!--                                    tiny master db, and huge document store</p>-->
+<!--                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-1 col-xs-1 avatar">-->
+<!--                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg"-->
+<!--                                 class=" img-responsive ">-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group p-1">
+                        <input type="text" class="form-control" ng-model="ui.userMessage" placeholder="{{'ENTER_MESSAGE'|translate}}" on-enter-press="sendMessage()">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" translate="SEND" ng-click="sendMessage()" ng-disabled="!ui.userMessage" ></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,213 @@
+<div class="main-table-wrapper overflow-auto shadow">
+    <div class="accordion" id="filter_accordion">
+        <div class="card rounded-0">
+            <div class="card-header rounded-0 p-0" id="filter_heading">
+                <div class="mb-0">
+                    <button class="btn btn-block text-left rounded-0 bg-light filter-btn" type="button" ng-click="showFilters=!showFilters"
+                            data-toggle="collapse" data-target="#collapse_filter" aria-expanded="true"
+                            aria-controls="collapse_filter">
+                        <span translate="FILTERS"></span>
+                        <i class="right" ng-class="{'bi bi-chevron-down': showFilters, 'bi bi-chevron-right': !showFilters}"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div id="collapse_filter" class="collapse" ng-class="{'show':showFilters}" aria-labelledby="filter_heading" data-parent="#filter_accordion">
+                <div class="card-body">
+                    <div class="d-flex flex-row">
+                        <div class="filter-item">
+                            <div class="input-group">
+                                <input class="form-control form-control-sm" ng-model="filter.rfid" placeholder="RFID">
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <div class="card h-100 justify-content-center pl-1"><!--v align hint-->
+                                <div class="filter-item">
+                                    <div class="form-check form-check-inline checkbox-sm">
+                                        <div class="custom-control custom-checkbox p-0">
+                                            <input class="form-check-input custom-control-input" ng-model="filter.showBlockedCards" type="checkbox" id="show_blocked_cards">
+                                            <label class="form-check-label custom-control-label" for="show_blocked_cards" translate="SHOW_BLOCKED_CARDS"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-borderless table-striped table-hover account-operations-table" ng-if="loaded" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle border-0"><span class="bi bi-gear mr-1" column-chooser="rfidObjectsTable" fire="{{fireFunc()}}"></span>#</th>
+            <th ts-criteria="name|trim" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="rfid" scope="col" class="align-middle border-0" translate>RFID</th>
+            <th ts-criteria="pinCode" scope="col" class="align-middle border-0" translate>PIN_CODE</th>
+            <th ts-criteria="typeName" scope="col" class="align-middle border-0" translate>TYPE</th>
+            <th ts-criteria="status" scope="col" class="align-middle border-0" translate>STATUS</th>
+            <th ts-criteria="balance|parseFloat" scope="col" class="align-middle border-0" translate>BALANCE</th>
+            <th ts-criteria="dailyLimit|parseFloat" scope="col" class="align-middle border-0" translate>LIMIT_REMAINS</th>
+            <th ts-criteria="limitType" scope="col" class="align-middle border-0" translate>LIMIT_REMAINS_TYPE</th>
+            <th ts-criteria="dailyBalance|parseFloat" scope="col" class="align-middle border-0" translate>DAY_BALANCE</th>
+            <th ts-criteria="codeId" scope="col" class="align-middle border-0" translate>CODE</th>
+            <th ts-criteria="employeeName" scope="col" class="align-middle border-0" translate>EMPLOYEE</th>
+            <th ts-criteria="storehouseName" scope="col" class="align-middle border-0" translate>STOREHOUSE</th>
+            <th ts-criteria="vehicleName" scope="col" class="align-middle border-0" translate>VEHICLE</th>
+            <th ts-criteria="partnerName" scope="col" class="align-middle border-0" translate>CONTRACTOR</th>
+            <th ts-criteria="divisionName" scope="col" class="align-middle border-0" translate>DIVISION</th>
+            <th ts-criteria="createdOn" scope="col" class="align-middle border-0" translate>REGISTRATION_DATE</th>
+            <th ts-criteria="createdByName" scope="col" class="align-middle border-0" translate>CREATED_BY</th>
+            <th class="align-middle border-0"></th>
+            <th class="align-middle border-0"></th>
+            <th class="align-middle border-0"></th>
+            <th colspan="4" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="objectRfid in objectsRfid | filter: search | filter: advancedFilter" ts-repeat ng-click="setCurrentRfid(objectRfid)"
+            ng-class="currentRfid.rfid==objectRfid.rfid ? 'badge-secondary' : ''">
+            <td class="align-middle width-10" ng-bind="$index+1"></td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.name" ng-show="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-show="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <input minlength="1" type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.name">
+                </div>
+            </td>
+            <td class="align-middle" ng-bind="objectRfid.rfid"></td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.pinCode" ng-show="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-show="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <input minlength="1" type="number" class="form-control form-control-sm" ng-model="selectedObjectRfid.pinCode">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.typeName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.typeId">
+                        <option ng-repeat="type in objectsRfidTypes" ng-value="type.id">{{type.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle p-0">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" ng-if="selectedObjectRfid.rfid == objectRfid.rfid && objectRfid.status != 2">
+                    <button type="button" class="btn btn-sm btn-secondary" tooltip-append-to-body="true" uib-tooltip="{{'LIMIT_CARD'|translate}}" ng-click="selectedObjectRfid.status = 0" ng-class="{'active':selectedObjectRfid.status==0}"><i class="h5 bi bi-dash text-info"></i></button>
+                    <button type="button" class="btn btn-sm btn-secondary" tooltip-append-to-body="true" uib-tooltip="{{'UNLIMITED_CARD'|translate}}" ng-click="selectedObjectRfid.status = 1" ng-class="{'active':selectedObjectRfid.status==1}"><i class="h5 bi bi-check text-success"></i></button>
+                </div>
+                <i ng-if="selectedObjectRfid.rfid != objectRfid.rfid || objectRfid.status == 2" class="h5 b" ng-class="statusClass(objectRfid.status)"></i>
+            </td>
+            <td class="align-middle" ng-bind="objectRfid.balance | number : 2"></td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.dailyLimit | number : 2" ng-show="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-show="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <input type="number" class="form-control form-control-sm" ng-model="selectedObjectRfid.dailyLimit">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.limitTypeName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.limitTypeId">
+                        <option ng-repeat="limitType in limitTypes | orderBy:'name'" ng-value="limitType.id">{{limitType.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle" ng-bind="objectRfid.dailyBalance | number : 2"></td>
+            <td class="align-middle" ng-bind="objectRfid.codeId?objectRfid.codeId:''"></td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.employeeName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.employeeId">
+                        <option ng-repeat="employee in employees | orderBy:'name'" ng-value="employee.id">{{employee.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.storehouseName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.storehouseId">
+                        <option ng-repeat="storehouse in storehouses" ng-value="storehouse.id">{{storehouse.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.vehicleName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <!--                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">-->
+                <!--                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.vehicleId">-->
+                <!--                        <option ng-repeat="vehicle in vehicles" ng-value="vehicle.id">{{vehicle.name}}</option>-->
+                <!--                    </select>-->
+                <!--                </div>-->
+
+
+                <div ng-if="selectedObjectRfid.rfid == objectRfid.rfid" class="width-200"
+                     ng-click="$event.preventDefault();$event.stopPropagation();">
+                    <ui-select ng-model="selectedObjectRfid.vehicleName"
+                               autofocus="true" class="width-200"
+                               theme="select2" on-select="saveVehicle($item, $model, selectedObjectRfid)">
+                        <ui-select-match placeholder="Введите название авто...">{{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="vehicle.name as vehicle in ui.vehicles track by $index"
+                                           refresh="getVehicles($select.search)"
+                                           refresh-delay="500">
+                            <span ng-bind-html="vehicle.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+            </td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.partnerName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.partnerId">
+                        <option ng-repeat="partner in partners" ng-value="partner.id">{{partner.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="objectRfid.divisionName" ng-if="selectedObjectRfid.rfid != objectRfid.rfid"></span>
+                <div class="input-group" ng-if="selectedObjectRfid.rfid == objectRfid.rfid">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedObjectRfid.divisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle" ng-bind="objectRfid.createdOn | date:'medium'"></td>
+            <td class="align-middle" ng-bind="objectRfid.createdByName"></td>
+            <td ng-show="selectedObjectRfid.rfid != objectRfid.rfid" class="align-middle width-25"><i role="button" ng-class="objectRfid.status == 2 ? 'bi bi-lock-fill ' : 'bi bi-unlock'" tooltip-append-to-body="true" uib-tooltip="{{objectRfid.status == 2 ? ('LOCK'|translate) : ('UNLOCK'|translate)}}" ng-click="$event.stopPropagation();setStatus(objectRfid)"></i></td>
+            <td class="align-middle width-25"><i role="button" ng-class="currentRfid.rfid==objectRfid.rfid ? 'bi bi-star-fill' : 'bi  bi-star'"></i></td>
+            <td colspan="{{objectRfid.status == 2?4:6}}" ng-show="selectedObjectRfid.rfid != objectRfid.rfid" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="editRfid(objectRfid)"></i></td>
+            <td ng-show="objectRfid.status == 2 && selectedObjectRfid.rfid != objectRfid.rfid" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="deleteRfid(objectRfid)"></i></td>
+            <td ng-show="selectedObjectRfid.rfid == objectRfid.rfid" colspan="6" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="saveRfid(objectRfid)"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancelEdit()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newRfidObject.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="16" type="number" class="form-control form-control-sm" ng-model="newRfidObject.rfid">
+                </div>
+            </td>
+            <td></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newRfidObject.typeRfid">
+                        <option ng-repeat="type in objectsRfidTypes" ng-value="type.id">{{type.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td colspan="17" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newRfidObject.name || !newRfidObject.rfid || !newRfidObject.typeRfid" ng-click="addRfid()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

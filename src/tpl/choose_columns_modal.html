@@ -1,0 +1,13 @@
+<div class="modal-body pt-4 pb-4">
+    <table class="table account-operations-table">
+        <tr ng-repeat="column in rawColumns">
+            <td ng-bind="column.obj.text()"></td>
+            <td><input type="checkbox" ng-model="column.meta.show" ng-change="showHideColumn(column)"/></td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">
+        <i role="button" class="bi bi-check"></i>
+    </button>
+</div>

@@ -1,0 +1,33 @@
+<div class="bg-light">
+    <div class="A4 mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+<!--            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>-->
+        </div>
+
+        <div>
+            <table class="w-100 table table-bordered border-dark">
+                <thead>
+                <tr>
+                    <td colspan="3">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_TOTALS_BY_VEHICLE"></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col" class="align-middle w-25" translate>NAME</th>
+                    <th scope="col" class="align-middle w-25" translate>CREDIT</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in items">
+                    <td class="align-middle" ng-bind="item.vehicleName"></td>
+                    <td class="align-middle" ng-bind="item.credit | number : 2"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

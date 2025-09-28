@@ -1,0 +1,93 @@
+<div class="bg-light">
+    <div class="A4 album mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+                <div class="custom-control custom-checkbox p-1">
+                    <input class="form-check-input custom-control-input" ng-change="setByDays(true);getReport(true)" type="checkbox" ng-model="byRemains" id="byRemains">
+                    <label class="form-check-label custom-control-label" for="byRemains" translate>BY_REMAINS</label>
+                </div>
+                <div class="custom-control custom-checkbox p-1" ng-if="!byRemains">
+                    <input class="form-check-input custom-control-input" type="checkbox" ng-change="setByDays(byDays)" ng-model="byDays" id="byDays">
+                    <label class="form-check-label custom-control-label" for="byDays" translate>BY_DAYS</label>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+        </div>
+        <div>
+            <table class="w-100 table table-bordered border-dark">
+                <thead class="thead-dark">
+                <tr>
+                    <td colspan="9">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_FUEL_MOVING"></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                            <div translate="PRODUCT_TYPE" translate-values='{item: "{{items[0].productName}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col" id="storehouse_name"><span translate>NAME</span></th>
+                    <th class="col" id="storehouse_volume"><span translate>VOLUME</span></th>
+                    <th class="col" id="storehouse_level_min"><span translate>LEVEL_START</span></th>
+                    <th class="col" id="input"><span translate>INCOME</span></th>
+                    <th class="col" id="quantity"><span translate>CONSUMPTION</span></th>
+                    <th class="col" id="final_counter"><span translate>FINAL_COUNTER</span></th>
+                    <th class="col" id="storehouse_level"><span translate>LEVEL_END</span></th>
+                    <th class="col" id="deviation"><span translate>DEVIATION</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat-start="tank in items | orderBy : 'tankName'">
+                    <td ng-bind="tank.tankName" class="font-weight-bold"></td>
+                    <td ng-bind="tank.tankVolume | number : 2" class="text-right"></td>
+                    <td ng-bind="tank.levelMin | number : 2" class="text-right"></td>
+                    <td ng-bind="tank.input | number : 2" class="text-right"></td>
+                    <td ng-bind="-tank.quantity | number : 2" class="text-right"></td>
+                    <td ng-bind="tank.levelMin + tank.input + tank.quantity | number : 2" class="text-right"></td>
+                    <td ng-show="!tank.sensorExists" ng-bind="tank.level | number : 2" class="text-right"></td>
+                    <td ng-show="!tank.sensorExists" ng-bind="tank.level - (tank.levelMin + tank.input + tank.quantity) | number : 2" class="text-right"></td>
+                </tr>
+                <tr ng-show="byDays" ng-repeat-end ng-repeat-start="(day, val) in tank.byDaysMap">
+                    <td ng-bind="day"></td>
+                    <td></td>
+                    <td ng-bind="val.startDayCount | number : 2" class="text-right"></td>
+                    <td ng-bind="val.debit | number : 2" class="text-right"></td>
+                    <td ng-bind="val.credit | number : 2" class="text-right"></td>
+                    <td ng-bind="val.count | number : 2" class="text-right"></td>
+                    <td ng-show="!tank.sensorExists" ng-bind="dateMap[tank.storehouseId+day] | number : 2" class="text-right"></td>
+                    <td ng-show="!tank.sensorExists" ng-bind="dateMap[tank.storehouseId+day]-val.count | number : 2" class="text-right"></td>
+                </tr>
+                <tr ng-repeat-end>
+                    <td colspan="8" ng-if="showCharts && tanksMap[tank.storehouseId].data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="charts-preview">
+                                    <div class="chart-container">
+                                        <div class="chartdiv" id="{{'chartdiv' + tanksMap[tank.storehouseId].id}}" style="height: 200px"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+<!--                <tr ng-if="showCharts && tanksMap[tank.tankId].data && !byDays">-->
+<!--                    <td colspan="8">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-md-12">-->
+<!--                                <div class="charts-preview">-->
+<!--                                    <div class="chart-container">-->
+<!--                                        <div class="chartdiv" id="{{'chartdiv' + tanksMap[tank.tankId].id}}" style="height: 200px"></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

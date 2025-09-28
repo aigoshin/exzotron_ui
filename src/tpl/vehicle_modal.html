@@ -1,0 +1,35 @@
+<form novalidate name="vehicleForm" ng-submit="ok(vehicleForm)">
+    <div class="modal-body pt-4 pb-4">
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12" translate="VEHICLE"></h4>
+            <label for="name" class="col-md-4 col-form-label" translate="NAME"></label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(vehicleForm.name.$error.required)  && (vehicleForm.name.$touched || vehicleForm.$submitted)}"
+                       ng-required="true" ng-model="vehicle.name" readonly
+                       class="form-control form-control-sm" id="name" name="name">
+            </div>
+
+            <label for="imei" class="col-md-4 col-form-label">IMEI</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(vehicleForm.imei.$error.required)  && (vehicleForm.imei.$touched || vehicleForm.$submitted)}"
+                       ng-required="true" ng-model="vehicle.imei"
+                       class="form-control form-control-sm" id="imei" name="imei">
+            </div>
+
+            <label for="rfid" class="col-md-4 col-form-label">RFID</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(vehicleForm.rfid.$error.required)  && (vehicleForm.rfid.$touched || vehicleForm.$submitted)}"
+                       ng-required="true" ng-model="vehicle.rfid" readonly
+                       class="form-control form-control-sm" id="rfid" name="rfid">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">
+            <i role="button" class="bi bi-check"></i>
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">
+            <i role="button" class="bi bi-x"></i>
+        </button>
+    </div>
+</form>

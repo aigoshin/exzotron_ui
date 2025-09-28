@@ -1,0 +1,148 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle border-0"><span class="bi bi-gear mr-1" column-chooser="rfidObjectsTable" fire="{{fireFunc()}}"></span>#</th>
+            <th ts-criteria="id" ts-default scope="col" class="align-middle border-0" translate>ID</th>
+            <th ts-criteria="name" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="rfid" scope="col" class="align-middle border-0" translate>RFID</th>
+            <th ts-criteria="imei" scope="col" class="align-middle border-0" translate>IMEI</th>
+            <th ts-criteria="sensorName" scope="col" class="align-middle border-0" translate>SENSOR</th>
+            <th ts-criteria="multiplier" scope="col" class="align-middle border-0" translate>MULTIPLIER</th>
+            <th ts-criteria="serverApiName" scope="col" class="align-middle border-0" translate>SERVER</th>
+            <th ts-criteria="divisionName" scope="col" class="align-middle border-0" translate="DIVISION"></th>
+            <th ts-criteria="licensePlate" scope="col" class="align-middle border-0" translate="LICENSE_PLATE"></th>
+            <th ts-criteria="garageNumber" scope="col" class="align-middle border-0" translate="GARAGE_NUMBER"></th>
+            <th ts-criteria="emptyWeightKg" scope="col" class="align-middle border-0" translate>EMPTY_WEIGHT</th>
+            <th ts-criteria="trueFuelControl" scope="col" class="align-middle border-0" translate>TRUE_FUEL_CONTROL</th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in vehicles | filter: search" ts-repeat ng-click="setCurrentVehicle(item)"
+            ng-class="item.id == currentVehicle.id ? 'badge-secondary' : ''">
+            <td class="align-middle width-10" ng-bind="$index+1"></td>
+            <td class="align-middle width-10" ng-bind="item.id"></td>
+            <td class="align-middle">
+                <span ng-bind="item.name" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.rfid" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="number" class="form-control form-control-sm" ng-model="selectedItem.rfid">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.imei" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" maxlength="15" class="form-control form-control-sm" ng-model="selectedItem.imei">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.sensorName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" maxlength="15" class="form-control form-control-sm" ng-model="selectedItem.sensorName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.multiplier" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="number" step="0.001" class="form-control form-control-sm" ng-model="selectedItem.multiplier">
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.serverApiName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.serverApiId">
+                        <option ng-repeat="server in servers" ng-value="server.id">{{server.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.divisionName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.divisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.licensePlate" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" maxlength="15" class="form-control form-control-sm" ng-model="selectedItem.licensePlate">
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.garageNumber" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" maxlength="15" class="form-control form-control-sm" ng-model="selectedItem.garageNumber">
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.emptyWeightKg" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="number" maxlength="15" class="form-control form-control-sm" ng-model="selectedItem.emptyWeightKg">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="item.trueFuelControl" ng-click="$event.stopPropagation()" ng-change="setTrueFuelControl(item)">
+                </div>
+            </td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" ng-class="item.id == currentVehicle.id ? 'bi bi-star-fill' : 'bi  bi-star'"></i></td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="edit(item)"></i></td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="delete(item)"></i></td>
+            <td ng-show="selectedItem.id == item.id" colspan="3" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="255" type="text" class="form-control form-control-sm" ng-model="newItem.name">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" ng-model="newItem.rfid">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="15" type="text" class="form-control form-control-sm" ng-model="newItem.imei">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="15" type="text" class="form-control form-control-sm" ng-model="newItem.sensorName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="number" step="0.001" class="form-control form-control-sm" ng-model="newItem.multiplier">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.serverApiId">
+                        <option ng-repeat="server in servers" ng-value="server.id">{{server.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td colspan="9" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newItem.name" ng-click="add()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

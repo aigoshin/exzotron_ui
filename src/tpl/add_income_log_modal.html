@@ -1,0 +1,259 @@
+<form novalidate name="incomeLogForm" ng-submit="ok(incomeLogForm)">
+    <div class="modal-body pt-4 pb-4">
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Получатель и Поставщик</h4>
+            <label for="recipient" class="col-md-4 col-form-label" translate>RECIPIENT</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(incomeLogForm.recipient.$error.required)  && (incomeLogForm.recipient.$touched || incomeLogForm.$submitted)}"
+                        type="text" id="recipient" name="recipient" class="form-control form-control-sm" ng-model="item.recipientId">
+                    <option ng-repeat="recipient in recipients" ng-value="recipient.id">{{recipient.name}}</option>
+                </select>
+            </div>
+            <label for="supplier" class="col-md-4 col-form-label" translate>SUPPLIER</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(incomeLogForm.supplier.$error.required)  && (incomeLogForm.supplier.$touched || incomeLogForm.$submitted)}"
+                        type="text" id="supplier" name="supplier" class="form-control form-control-sm" ng-model="item.supplierId">
+                    <option ng-repeat="supplier in suppliers" ng-value="supplier.id">{{supplier.name}}</option>
+                </select>
+            </div>
+        </div>
+
+<!--        <div class="form-row" ng-init="item.storehouseId ? storage = 1 : storage = 0">-->
+<!--            <div class="form-group col-md-6">-->
+<!--                <div class="custom-control custom-radio custom-control-inline" ng-click="item.storehouseId = null">-->
+<!--                    <input ng-model="storage" ng-value="0" type="radio" id="storage_tank_radio" name="storage" class="custom-control-input">-->
+<!--                    <label class="custom-control-label" for="storage_tank_radio" translate>TANK</label>-->
+<!--                </div>-->
+<!--                <div class="custom-control custom-radio custom-control-inline" ng-click="item.tankId = null">-->
+<!--                    <input ng-model="storage" ng-value="1" type="radio" id="storage_storehouse_radio" name="storage" class="custom-control-input">-->
+<!--                    <label class="custom-control-label" for="storage_storehouse_radio" translate>STOREHOUSE</label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Продукт и Хранилище</h4>
+            <label for="product" class="col-md-4 col-form-label" translate>PRODUCT</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(incomeLogForm.product.$error.required)  && (incomeLogForm.product.$touched || incomeLogForm.$submitted)}"
+                        type="text" id="product" name="product" class="form-control form-control-sm" ng-model="item.productId">
+                    <option ng-repeat="product in products" ng-value="product.id">{{product.name}}</option>
+                </select>
+            </div>
+<!--            <div class="form-group col-md-6" ng-if="storage==0">-->
+<!--                <label for="tank" translate>TANK</label>-->
+<!--                <select ng-class="{'is-invalid':(incomeLogForm.tank.$error.required)  && (incomeLogForm.tank.$touched || incomeLogForm.$submitted)}"-->
+<!--                        type="text" id="tank" name="tank" class="form-control form-control-sm" ng-model="item.tankId">-->
+<!--                    <option ng-repeat="tank in tanks" ng-value="tank.id">{{tank.name}}</option>-->
+<!--                </select>-->
+<!--            </div>-->
+            <label for="storehouse" class="col-md-4 col-form-label" translate="STOREHOUSE"></label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(incomeLogForm.storehouse.$error.required)  && (incomeLogForm.storehouse.$touched || incomeLogForm.$submitted)}"
+                        type="text" id="storehouse" name="storehouse" class="form-control form-control-sm" ng-model="item.storehouseId">
+                    <option ng-repeat="storehouse in storehouses" ng-value="storehouse.id">{{storehouse.name}}</option>
+                </select>
+            </div>
+
+            <label for="related_storehouse" class="col-md-4 col-form-label" translate="RELATED_STOREHOUSE"></label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(incomeLogForm.related_storehouse.$error.required)  && (incomeLogForm.related_storehouse.$touched || incomeLogForm.$submitted)}"
+                        type="text" ng-required="false" id="related_storehouse" name="related_storehouse"
+                        class="form-control form-control-sm" ng-model="item.relatedStorehouseId" ng-change="setInvoiceOperationType(item.relatedStorehouseId)">
+                    <option ng-repeat="storehouse in storehouses" ng-value="storehouse.id">{{storehouse.name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Параметры при отгрузке</h4>
+            <label for="litres_density_doc" class="col-md-4 col-form-label" translate>LITRES_DENSITY_DOC</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.litres_density_doc.$error.required)  && (incomeLogForm.litres_density_doc.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.litresDensityDoc" type="number" ng-init="item.litresDensityDoc=item.litresDensityDoc?item.litresDensityDoc:0"
+                       class="form-control form-control-sm" id="litres_density_doc" name="litres_density_doc">
+            </div>
+
+            <label for="temperature_doc" class="col-md-4 col-form-label" translate>TEMPERATURE_DOC</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.temperature_doc.$error.required)  && (incomeLogForm.temperature_doc.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.temperatureDoc" type="number" ng-init="item.temperatureDoc=item.temperatureDoc?item.temperatureDoc:0"
+                       class="form-control form-control-sm" id="temperature_doc" name="temperature_doc">
+            </div>
+
+            <label for="density_doc" class="col-md-4 col-form-label" translate>DENSITY_DOC</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.density_doc.$error.required)  && (incomeLogForm.density_doc.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.densityDoc" type="number" ng-init="item.densityDoc=item.densityDoc?item.densityDoc:0"
+                       class="form-control form-control-sm" id="density_doc" name="density_doc"
+                       ng-model-options="{debounce: 500}" ng-change="calculateDecrease()">
+            </div>
+
+            <label for="weight_doc" class="col-md-4 col-form-label" translate>WEIGHT_DOC</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.weight_doc.$error.required)  && (incomeLogForm.weight_doc.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.weightDoc" type="number" ng-init="item.weightDoc=item.weightDoc?item.weightDoc:0"
+                       class="form-control form-control-sm" id="weight_doc" name="weight_doc">
+            </div>
+
+            <label for="litres_counter_doc" class="col-md-4 col-form-label" translate>LITRES_COUNTER_DOC</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.litres_counter_doc.$error.required)  && (incomeLogForm.litres_counter_doc.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.litresCounterDoc" type="number" ng-init="item.litresCounterDoc=item.litresCounterDoc?item.litresCounterDoc:0"
+                       class="form-control form-control-sm" id="litres_counter_doc" name="litres_counter_doc"
+                       ng-model-options="{debounce: 500}" ng-change="calculateDecrease()">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Параметры при приеме</h4>
+
+            <label for="litres_density_in" class="col-md-4 col-form-label" translate>LITRES_DENSITY_IN</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.litres_density_in.$error.required)  && (incomeLogForm.litres_density_in.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.litresDensityIn" type="number" ng-init="item.litresDensityIn=item.litresDensityIn?item.litresDensityIn:0"
+                       class="form-control form-control-sm" id="litres_density_in" name="litres_density_in">
+            </div>
+
+            <label for="temperature_in" class="col-md-4 col-form-label" translate>TEMPERATURE_IN</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.temperature_in.$error.required)  && (incomeLogForm.temperature_in.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.temperatureIn" type="number" ng-init="item.temperatureIn=item.temperatureIn?item.temperatureIn:0"
+                       class="form-control form-control-sm" id="temperature_in" name="temperature_in">
+            </div>
+
+            <label for="density_in" class="col-md-4 col-form-label" translate>DENSITY_IN</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.density_in.$error.required)  && (incomeLogForm.density_in.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.densityIn" type="number" ng-init="item.densityIn=item.densityIn?item.densityIn:0"
+                       class="form-control form-control-sm" id="density_in" name="density_in"
+                       ng-model-options="{debounce: 500}" ng-change="calculateDecrease()">
+            </div>
+
+            <label for="weight_in" class="col-md-4 col-form-label" translate>WEIGHT_IN</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.weight_in.$error.required)  && (incomeLogForm.weight_in.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.weightIn" type="number" ng-init="item.weightIn=item.weightIn?item.weightIn:0"
+                       class="form-control form-control-sm" id="weight_in" name="weight_in">
+            </div>
+
+            <label for="litres_counter_in" class="col-md-4 col-form-label" translate>LITRES_COUNTER_IN</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.litres_counter_in.$error.required)  && (incomeLogForm.litres_counter_in.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.litresCounterIn" type="number" ng-init="item.litresCounterIn=item.litresCounterIn?item.litresCounterIn:0"
+                       class="form-control form-control-sm" id="litres_counter_in" name="litres_counter_in"
+                       ng-model-options="{debounce: 500}" ng-change="calculateDecrease()">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Дополнительные параметры</h4>
+
+            <label for="total" class="col-md-4 col-form-label" translate="SUM"></label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.total.$error.required)  && (incomeLogForm.total.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-model="item.total" type="number"
+                       class="form-control form-control-sm" id="total" name="total" ng-init="item.total=item.total?item.total:0">
+            </div>
+
+            <label for="delivery_sum" class="col-md-4 col-form-label" translate="DELIVERY_SUM"></label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.delivery_sum.$error.required)  && (incomeLogForm.delivery_sum.$touched || incomeLogForm.$submitted)}"
+                       ng-required="false" ng-model="item.deliverySum" type="number"
+                       class="form-control form-control-sm" id="delivery_sum" name="delivery_sum">
+            </div>
+
+            <label for="order_description" class="col-md-4 col-form-label" translate>COMMENT</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.order_description.$error.required)  && (incomeLogForm.order_description.$touched || incomeLogForm.$submitted)}"
+                       ng-required="false" ng-model="item.orderDescription" type="text"
+                       class="form-control form-control-sm" id="order_description" name="order_description">
+            </div>
+
+            <label for="product_name_doc" class="col-md-4 col-form-label" translate>PRODUCT_NAME_DOC</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.product_name_doc.$error.required)  && (incomeLogForm.product_name_doc.$touched || incomeLogForm.$submitted)}"
+                       ng-required="false" ng-model="item.productNameDoc" type="text"
+                       class="form-control form-control-sm" id="product_name_doc" name="product_name_doc">
+            </div>
+
+            <label for="doc_num" class="col-md-4 col-form-label" translate>DOC_NUM</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.doc_num.$error.required)  && (incomeLogForm.doc_num.$touched || incomeLogForm.$submitted)}"
+                       ng-required="false" ng-model="item.docNum" type="text"
+                       class="form-control form-control-sm" id="doc_num" name="doc_num">
+            </div>
+
+            <label for="doc_date" class="col-md-4 col-form-label" translate>DOC_DATE</label>
+            <div class="form-group col-md-8">
+                <div class="dropdown">
+                    <b id="dropdown" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        <div class="input-group input-group-sm" ng-click="showDropdownDocDate=!showDropdownDocDate">
+                            <input id="doc_date" type="text" class="form-control" data-ng-model="item.docDate">
+                            <div class="input-group-append input-group-sm">
+                                <span class="input-group-text" id="basic-addon2"><i class="bi bi-calendar"></i></span>
+                            </div>
+                        </div>
+                    </b>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':showDropdownDocDate}">
+                        <datetimepicker data-ng-model="item.docDate"
+                                        data-on-set-time="onTimeSetDocDate(newVal, oldVal)"
+                                        data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                    </ul>
+                </div>
+            </div>
+
+            <label for="actual_date" class="col-md-4 col-form-label" translate>DATE</label>
+            <div class="form-group col-md-8">
+                <div class="dropdown">
+                    <b id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        <div class="input-group input-group-sm" ng-click="showDropdownActual=!showDropdownActual">
+                            <input id="actual_date" type="text" class="form-control" data-ng-model="item.actualDate">
+                            <div class="input-group-append input-group-sm">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar"></i></span>
+                            </div>
+                        </div>
+                    </b>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':showDropdownActual}">
+                        <datetimepicker data-ng-model="item.actualDate"
+                                        data-on-set-time="onTimeSetActualDate(newVal, oldVal)"
+                                        data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                    </ul>
+                </div>
+            </div>
+
+            <label for="sum" class="col-md-4 col-form-label"><span  translate="DECREASE"></span></label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(incomeLogForm.sum.$error.required)  && (incomeLogForm.sum.$touched || incomeLogForm.$submitted)}"
+                       ng-required="true" ng-disabled="true"  ng-model="item.sum" ng-init="item.sum=item.sum?item.sum:0"
+                       class="form-control form-control-sm" id="sum" name="sum">
+            </div>
+
+            <label for="smoothing" class="col-md-4 col-form-label" translate>SMOOTHING</label>
+            <div class="form-group col-md-8">
+                <input ng-required="false" ng-model="item.smoothing" type="number"
+                       class="form-control form-control-sm" id="smoothing" name="smoothing">
+            </div>
+            <label for="threshold" class="col-md-4 col-form-label" translate>THRESHOLD</label>
+            <div class="form-group col-md-8">
+                <input ng-required="false" ng-model="item.threshold" type="number"
+                       class="form-control form-control-sm" id="threshold" name="threshold">
+            </div>
+            <label for="invoise_operation_type" class="col-md-4 col-form-label" translate>INVOISE_OPERATION_TYPE</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(incomeLogForm.invoise_operation_type.$error.required)  && (incomeLogForm.invoise_operation_type.$touched || incomeLogForm.$submitted)}"
+                        type="text" id="invoise_operation_type" name="invoise_operation_type" class="form-control form-control-sm" ng-model="item.invoiseOperationType">
+                    <option ng-repeat="type in invoiseOperationTypes" ng-value="type.id">{{type.name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">
+            <i role="button" class="bi bi-check"></i>
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">
+            <i role="button" class="bi bi-x"></i>
+        </button>
+    </div>
+</form>

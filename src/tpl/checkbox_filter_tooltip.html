@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 width-300 height-200 overflow-auto">
+            <table>
+                <tr ng-repeat="item in filterItems">
+                    <td>
+                        <div class="form-check form-check-inline checkbox-sm">
+                            <div class="custom-control custom-checkbox p-0">
+                                <input class="form-check-input custom-control-input" type="checkbox"
+                                       checklist-model="ui.filterItems" checklist-value="item.id"
+                                       id={{item.id+'filter'}}>
+                                <label class="form-check-label custom-control-label" for={{item.id+'filter'}}
+                                       ng-bind="item.name"></label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

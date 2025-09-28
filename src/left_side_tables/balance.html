@@ -1,0 +1,82 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <div class="p-2">
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true" uib-tooltip="{{'ONLY_WITH_MOVES_TOOLTIP'|translate}}">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="getObjectRfidBalance()" type="checkbox" ng-model="ui.showOnlyNonZeroItems" id="showOnlyNonZeroItems">
+                <label class="form-check-label custom-control-label" for="showOnlyNonZeroItems" translate>WITH_MOVES</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline" tooltip-append-to-body="true" uib-tooltip="{{'GROUP_BY_OBJECTS_TOOLTIP'|translate}}">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" ng-change="getObjectRfidBalance();groupByObjects()" type="checkbox" ng-model="ui.groupByObjects" id="groupByObjects" value="option2">
+                <label class="form-check-label custom-control-label" for="groupByObjects" translate>GROUP_BY_OBJECTS</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+            <div class="custom-control custom-checkbox p-1">
+                <input class="form-check-input custom-control-input" type="checkbox" ng-change="showBalanceChart()" ng-model="ui.showVehicleChart" id="showTankCharts">
+                <label class="form-check-label custom-control-label" for="showTankCharts" translate>CHARTS</label>
+            </div>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="text" ng-model="balanceSerach" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+        </div>
+    </div>
+    <table rz-table rz-mode="'OverflowResizer'" rz-model="table" id="summary_balance_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr ng-if="!ui.groupByObjects">
+            <th class="pl-1" id="rfid"><span class="bi bi-gear mr-1" column-chooser="cc1" fire="{{objectRfidBalance}}"></span><span ts-criteria="rfid|trim">{{ui.groupByObjects?'IMEI':'RFID'}}</span></th>
+            <th id="name"><span ts-criteria="name|trim" ts-default translate>NAME</span></th>
+            <th id="debit" ng-if="!ui.groupByObjects"><span ts-criteria="debit|parseFloat" translate>DEBIT</span></th>
+            <th id="credit" colspan="{{ui.groupByObjects?3:0}}"><span ts-criteria="credit|parseFloat" translate>CREDIT</span></th>
+            <th colspan="2" id="balance" ng-if="!ui.groupByObjects"><span ts-criteria="balance|parseFloat" translate>BALANCE</span></th>
+<!--            <th class="resize-disabled"></th>-->
+        </tr>
+        <tr ng-if="ui.groupByObjects">
+            <th class="pl-1" id="rfid"><span class="bi bi-gear mr-1" column-chooser="cc2" fire="{{objectRfidBalance}}"></span><span ts-criteria="rfid|trim">{{ui.groupByObjects?'IMEI':'RFID'}}</span></th>
+            <th id="name"><span ts-criteria="name|trim" ts-default translate>NAME</span></th>
+            <th id="debit" ng-if="!ui.groupByObjects"><span ts-criteria="debit|parseFloat" translate>DEBIT</span></th>
+            <th id="credit" colspan="{{ui.groupByObjects?3:0}}"><span ts-criteria="credit|parseFloat" translate>CREDIT</span></th>
+            <th colspan="2" id="balance" ng-if="!ui.groupByObjects"><span ts-criteria="balance|parseFloat" translate>BALANCE</span></th>
+<!--            <th class="resize-disabled"></th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-show="selectedRfidObject" class="badge-info">
+            <td class="ml-1" tooltip-append-to-body="true" uib-tooltip="{{selectedRfidObject.rfid}}" ng-bind="selectedRfidObject.rfid"></td>
+            <td tooltip-append-to-body="true" uib-tooltip="{{selectedRfidObject.name}}" ng-bind="selectedRfidObject.name"></td>
+            <td ng-if="!ui.groupByObjects" tooltip-append-to-body="true" uib-tooltip="{{selectedRfidObject.debit | number : 2}}" ng-bind="selectedRfidObject.debit | number : 2"></td>
+            <td colspan="{{ui.groupByObjects?3:0}}" tooltip-append-to-body="true" uib-tooltip="{{selectedRfidObject.credit | number : 2}}" ng-bind="selectedRfidObject.credit | number : 2"></td>
+            <td colspan="2" ng-if="!ui.groupByObjects" tooltip-append-to-body="true" uib-tooltip="{{selectedRfidObject.balance | number : 2}}" ng-bind="selectedRfidObject.balance | number : 2"></td>
+<!--            <td></td>-->
+        </tr>
+        <tr ng-repeat="item in objectRfidBalance | filter:balanceSerach" ts-repeat ng-click="filterAccountOperations(item)" ng-class="selectedClass(item)">
+            <td class="ml-1" tooltip-append-to-body="true" uib-tooltip="{{ui.groupByObjects?item.imei:item.rfid}}" ng-bind="ui.groupByObjects?item.imei:item.rfid"></td>
+            <td tooltip-append-to-body="true" uib-tooltip="{{item.name}}" ng-bind="item.name"></td>
+            <td ng-if="!ui.groupByObjects" tooltip-append-to-body="true" uib-tooltip="{{item.debit | number : 2}}" ng-bind="item.debit | number : 2"></td>
+            <td colspan="{{ui.groupByObjects?3:0}}" tooltip-append-to-body="true" uib-tooltip="{{item.credit | number : 2}}" ng-bind="item.credit | number : 2"></td>
+            <td colspan="2" ng-if="!ui.groupByObjects" tooltip-append-to-body="true" uib-tooltip="{{item.balance | number : 2}}" ng-bind="item.balance | number : 2"></td>
+<!--            <td></td>-->
+        </tr>
+        <tr class="badge-dark">
+            <td><span class="ml-1" translate>TOTALS</span>:</td>
+            <td></td>
+            <td ng-if="!ui.groupByObjects">
+                                <span tooltip-append-to-body="true" uib-tooltip="{{totalDebit | number : 2}}"
+                                      ng-bind="totalDebit | number : 2"></span>
+            </td>
+            <td>
+                                <span tooltip-append-to-body="true" uib-tooltip="{{totalCredit | number : 2}}"
+                                      ng-bind="totalCredit | number : 2"></span>
+            </td>
+            <td ng-if="!ui.groupByObjects">
+                                <span tooltip-append-to-body="true" uib-tooltip="{{totalBalance | number : 2}}"
+                                      ng-bind="totalBalance | number : 2"></span>
+            </td>
+            <td></td>
+            <td ng-if="ui.groupByObjects"></td>
+<!--            <td></td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>

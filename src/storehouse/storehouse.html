@@ -1,0 +1,89 @@
+<div class="main-table-wrapper overflow-auto shadow">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th ts-criteria="id" scope="col" class="align-middle border-0" translate>ID</th>
+            <th ts-criteria="name" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="productName" scope="col" class="align-middle border-0" translate>PRODUCT</th>
+            <th ts-criteria="productName" scope="col" class="align-middle border-0" translate="DIVISION"></th>
+            <th ts-criteria="responsible" scope="col" class="align-middle border-0" translate="RESPONSIBLE"></th>
+            <th ts-criteria="timePeriod" scope="col" class="align-middle border-0" translate="PERIOD"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in storehouses | filter: search" ts-repeat>
+            <td class="align-middle w-10">
+                <span ng-bind="item.id" ng-show="selectedItem.id != item.id"></span>
+            </td>
+            <td class="align-middle w-50">
+                <span ng-bind="item.name" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.name">
+                </div>
+            </td>
+            <td class="align-middle w-15">
+                <span ng-bind="item.productName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.productId">
+                        <option ng-repeat="product in products" ng-value="product.id">{{product.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.divisionName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.divisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-25">
+                <span ng-bind="item.userName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.userId">
+                        <option ng-repeat="user in users" ng-value="user.usersId">{{user.usersName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle 25">
+                <span ng-bind="item.timePeriod" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.timePeriod">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input tooltip-animation tooltip-append-to-body="true" uib-tooltip="{{item.sensorExists?'Датчик уровня присутствует':'Датчик уровня отсутствует'}}" type="checkbox" ng-model="item.sensorExists" ng-change="setSensorExist(item)">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input tooltip-animation tooltip-append-to-body="true" uib-tooltip="{{'Регистрация первички через Телеграм'}}" type="checkbox" ng-model="item.trueControl" ng-change="setTrueControl(item)">
+                </div>
+            </td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="edit(item)"></i></td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="delete(item)"></i></td>
+            <td ng-show="selectedItem.id == item.id" colspan="2" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newItem.name">
+                </div>
+            </td>
+            <td colspan="9" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newItem.name" ng-click="add()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

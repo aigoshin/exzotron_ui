@@ -1,0 +1,24 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <table rz-table rz-model="sensorsTable" id="sensors_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th class="col rz-hide" id="sensor_name"><span ts-criteria="sensorName|trim" translate>NAME</span></th>
+            <th class="width-25 rz-hide"></th>
+            <th class="width-25 rz-hide"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="sensor in sensors" ts-repeat>
+            <td class="ml-1" ng-bind="sensor.sensorName"></td>
+            <td class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="showSensorModal(sensor)"></i></td>
+            <td class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="deleteSensor(sensor)"></i></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="text-right" colspan="2">
+                <button class="btn btn-success btn-sm" ng-click="showSensorModal({correction:1,offset:0})"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

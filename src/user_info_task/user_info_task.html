@@ -1,0 +1,198 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th ts-criteria="id" ts-default scope="col" class="align-middle border-0" translate>ID</th>
+            <th ts-criteria="name" scope="col" class="align-middle border-0" translate>NAME</th>
+            <th ts-criteria="runTime" scope="col" class="align-middle border-0" translate>RUN_TIME</th>
+            <th ts-criteria="userName" scope="col" class="align-middle border-0" translate>SENDER</th>
+            <th ts-criteria="recipientName" scope="col" class="align-middle border-0" translate>RECIPIENT</th>
+            <th ts-criteria="rfidObjectName" scope="col" class="align-middle border-0" translate>RFID</th>
+            <th ts-criteria="divisionObjectName" scope="col" class="align-middle border-0" translate>DIVISION</th>
+            <th ts-criteria="objectName" scope="col" class="align-middle border-0" translate>OBJECT</th>
+            <th ts-criteria="partnerName" scope="col" class="align-middle border-0" translate>CONTRACTOR</th>
+            <th ts-criteria="period" scope="col" class="align-middle border-0" translate>PERIOD</th>
+            <th ts-criteria="taskTypeName" scope="col" class="align-middle border-0" translate>TYPE</th>
+            <th ts-criteria="status" scope="col" class="align-middle border-0" translate>STATUS</th>
+            <th ts-criteria="createdAt" scope="col" class="align-middle border-0" translate>CREATED_AT</th>
+            <th ts-criteria="updatedAt" scope="col" class="align-middle border-0" translate>UPDATED_AT</th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in items | filter: search | filter: filterByUser" ts-repeat>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil"
+                                                                                      ng-click="edit(item)"></i></td>
+            <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-trash"
+                                                                                      ng-click="delete(item)"></i></td>
+            <td class="align-middle">
+                <span ng-bind="item.id"></span>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.name" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.name">
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.runTime" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.runTime">
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.userName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.userId">
+                        <option ng-repeat="item in users" ng-value="item.usersId">{{item.usersName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.recipientName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.recipientId">
+                        <option ng-repeat="item in users" ng-value="item.usersId">{{item.usersName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.rfidObjectName" ng-show="selectedItem.id != item.id"></span>
+                <!--                <div class="input-group" ng-show="selectedItem.id == item.id">-->
+                <!--                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.rfidObjectId">-->
+                <!--                        <option ng-repeat="item in objectsRfid" ng-value="item.id">{{item.name}}</option>-->
+                <!--                    </select>-->
+                <!--                </div>-->
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.divisionObjectName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.divisionObjectId">
+                        <option ng-repeat="item in divisions" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.objectName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.objectId">
+                        <option ng-repeat="item in objects" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.partnerName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.partnerId">
+                        <option ng-repeat="item in partners" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.period" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <input type="text" class="form-control form-control-sm" ng-model="selectedItem.period">
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.taskTypeName" ng-show="selectedItem.id != item.id"></span>
+                <div class="input-group" ng-show="selectedItem.id == item.id">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.taskType">
+                        <option ng-repeat="item in taskTypes" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.status"></span>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.createdAt"></span>
+            </td>
+            <td class="align-middle w-100">
+                <span ng-bind="item.updatedAt"></span>
+            </td>
+            <td colspan="w-25"></td>
+            <td ng-show="selectedItem.id == item.id" colspan="2" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" ng-model="newItem.name">
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" ng-model="newItem.runTime">
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.userId">
+                        <option ng-repeat="item in users" ng-value="item.usersId">{{item.usersName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.recipientId">
+                        <option ng-repeat="item in users" ng-value="item.usersId">{{item.usersName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.rfidObjectId">
+                        <option ng-repeat="item in objectsRfid" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.divisionObjectId">
+                        <option ng-repeat="item in divisions" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.objectId">
+                        <option ng-repeat="item in objects" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.partnerId">
+                        <option ng-repeat="item in partners" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" ng-model="newItem.period">
+                </div>
+            </td>
+            <td class="align-middle w-100">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.taskType">
+                        <option ng-repeat="item in taskTypes" ng-value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td colspan="9" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newItem.name" ng-click="add()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

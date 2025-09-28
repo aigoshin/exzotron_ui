@@ -1,0 +1,394 @@
+<form novalidate name="weightbridgeForm" ng-submit="ok(weightbridgeForm)">
+    <div class="modal-body pt-4 pb-4">
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Основная информация</h4>
+
+            <label for="division" class="col-md-4 col-form-label" translate>DIVISION</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(weightbridgeForm.division.$error.required) && (weightbridgeForm.division.$touched || weightbridgeForm.$submitted)}"
+                        type="text" id="division" name="division" class="form-control form-control-sm"
+                        ng-model="item.exDivisionId">
+                    <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                </select>
+            </div>
+
+            <label for="name" class="col-md-4 col-form-label" translate>NAME</label>
+            <div class="form-group col-md-8">
+                <input ng-class="{'is-invalid':(weightbridgeForm.name.$error.required) && (weightbridgeForm.name.$touched || weightbridgeForm.$submitted)}"
+                       ng-required="true" ng-model="item.name" type="text"
+                       class="form-control form-control-sm" id="name" name="name">
+            </div>
+
+            <label for="location" class="col-md-4 col-form-label" translate>LOCATION</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.location" type="text"
+                       class="form-control form-control-sm" id="location" name="location">
+            </div>
+
+            <label for="latitude" class="col-md-4 col-form-label" translate>LATITUDE</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.latitude" type="number" step="0.0000001"
+                       class="form-control form-control-sm" id="latitude" name="latitude">
+            </div>
+
+            <label for="longitude" class="col-md-4 col-form-label" translate>LONGITUDE</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.longitude" type="number" step="0.0000001"
+                       class="form-control form-control-sm" id="longitude" name="longitude">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Сетевые параметры</h4>
+
+            <label for="connection_mode" class="col-md-4 col-form-label" translate>CONNECTION_MODE</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(weightbridgeForm.connection_mode.$error.required) && (weightbridgeForm.connection_mode.$touched || weightbridgeForm.$submitted)}"
+                        type="text" id="connection_mode" name="connection_mode" class="form-control form-control-sm"
+                        ng-model="item.connectionMode">
+                    <option value="LOCAL">Локальное подключение</option>
+                    <option value="EXTERNAL">Внешнее подключение</option>
+                </select>
+            </div>
+
+            <label for="router_imei" class="col-md-4 col-form-label" translate>ROUTER_IMEI</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.routerImei" type="text"
+                       class="form-control form-control-sm" id="router_imei" name="router_imei">
+            </div>
+
+            <label for="sim_primary" class="col-md-4 col-form-label" translate>SIM_PRIMARY</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.simPrimary" type="text"
+                       class="form-control form-control-sm" id="sim_primary" name="sim_primary">
+            </div>
+
+            <label for="sim_secondary" class="col-md-4 col-form-label" translate>SIM_SECONDARY</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.simSecondary" type="text"
+                       class="form-control form-control-sm" id="sim_secondary" name="sim_secondary">
+            </div>
+
+            <label for="external_ip" class="col-md-4 col-form-label" translate>EXTERNAL_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.externalIp" type="text"
+                       class="form-control form-control-sm" id="external_ip" name="external_ip">
+            </div>
+
+            <label for="router_ip" class="col-md-4 col-form-label" translate>ROUTER_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.routerIp" type="text"
+                       class="form-control form-control-sm" id="router_ip" name="router_ip">
+            </div>
+
+            <label for="wifi_ssid" class="col-md-4 col-form-label" translate>WIFI_SSID</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.wifiSsid" type="text"
+                       class="form-control form-control-sm" id="wifi_ssid" name="wifi_ssid">
+            </div>
+
+            <label for="wifi_password" class="col-md-4 col-form-label" translate>WIFI_PASSWORD</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.wifiPassword" type="text"
+                       class="form-control form-control-sm" id="wifi_password" name="wifi_password">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Параметры контроллера весов</h4>
+
+            <label for="controller_ip" class="col-md-4 col-form-label" translate>CONTROLLER_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.controllerIp" type="text"
+                       class="form-control form-control-sm" id="controller_ip" name="controller_ip">
+            </div>
+
+            <label for="controller_port" class="col-md-4 col-form-label" translate>CONTROLLER_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.controllerPort" type="number"
+                       class="form-control form-control-sm" id="controller_port" name="controller_port">
+            </div>
+
+            <label for="tablo_poll_interval_ms" class="col-md-4 col-form-label" translate>TABLO_POLL_INTERVAL_MS</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.tabloPollIntervalMs" type="number"
+                       class="form-control form-control-sm" id="tablo_poll_interval_ms" name="tablo_poll_interval_ms">
+            </div>
+
+            <label for="tablo_poll_count" class="col-md-4 col-form-label" translate>TABLO_POLL_COUNT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.tabloPollCount" type="number"
+                       class="form-control form-control-sm" id="tablo_poll_count" name="tablo_poll_count">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Передняя камера</h4>
+
+            <label for="camera_front_ip" class="col-md-4 col-form-label" translate>CAMERA_FRONT_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraFrontIp" type="text"
+                       class="form-control form-control-sm" id="camera_front_ip" name="camera_front_ip">
+            </div>
+
+            <label for="camera_front_port" class="col-md-4 col-form-label" translate>CAMERA_FRONT_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraFrontPort" type="number"
+                       class="form-control form-control-sm" id="camera_front_port" name="camera_front_port">
+            </div>
+
+            <label for="camera_front_user" class="col-md-4 col-form-label" translate>CAMERA_FRONT_USER</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraFrontUser" type="text"
+                       class="form-control form-control-sm" id="camera_front_user" name="camera_front_user">
+            </div>
+
+            <label for="camera_front_pass" class="col-md-4 col-form-label" translate>CAMERA_FRONT_PASS</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraFrontPass" type="text"
+                       class="form-control form-control-sm" id="camera_front_pass" name="camera_front_pass">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Задняя камера</h4>
+
+            <label for="camera_rear_ip" class="col-md-4 col-form-label" translate>CAMERA_REAR_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraRearIp" type="text"
+                       class="form-control form-control-sm" id="camera_rear_ip" name="camera_rear_ip">
+            </div>
+
+            <label for="camera_rear_port" class="col-md-4 col-form-label" translate>CAMERA_REAR_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraRearPort" type="number"
+                       class="form-control form-control-sm" id="camera_rear_port" name="camera_rear_port">
+            </div>
+
+            <label for="camera_rear_user" class="col-md-4 col-form-label" translate>CAMERA_REAR_USER</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraRearUser" type="text"
+                       class="form-control form-control-sm" id="camera_rear_user" name="camera_rear_user">
+            </div>
+
+            <label for="camera_rear_pass" class="col-md-4 col-form-label" translate>CAMERA_REAR_PASS</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraRearPass" type="text"
+                       class="form-control form-control-sm" id="camera_rear_pass" name="camera_rear_pass">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Парктроники</h4>
+
+            <div class="col-md-12">
+                <h5 class="weightbridge-submodal">Въезд</h5>
+            </div>
+
+            <label for="parktronik_entry_ip" class="col-md-4 col-form-label" translate>PARKTRONIK_ENTRY_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikEntryIp" type="text"
+                       class="form-control form-control-sm" id="parktronik_entry_ip" name="parktronik_entry_ip">
+            </div>
+
+            <label for="parktronik_entry_port" class="col-md-4 col-form-label" translate>PARKTRONIK_ENTRY_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikEntryPort" type="number"
+                       class="form-control form-control-sm" id="parktronik_entry_port" name="parktronik_entry_port">
+            </div>
+
+            <div class="col-md-12">
+                <h5 class="weightbridge-submodal">Центральный</h5>
+            </div>
+
+            <label for="parktronik_center_ip" class="col-md-4 col-form-label" translate>PARKTRONIK_CENTER_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikCenterIp" type="text"
+                       class="form-control form-control-sm" id="parktronik_center_ip" name="parktronik_center_ip">
+            </div>
+
+            <label for="parktronik_center_port" class="col-md-4 col-form-label" translate>PARKTRONIK_CENTER_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikCenterPort" type="number"
+                       class="form-control form-control-sm" id="parktronik_center_port" name="parktronik_center_port">
+            </div>
+
+            <label for="parktronik_center_poll_interval_ms" class="col-md-4 col-form-label" translate>PARKTRONIK_CENTER_POLL_INTERVAL_MS</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikCenterPollIntervalMs" type="number"
+                       class="form-control form-control-sm" id="parktronik_center_poll_interval_ms" name="parktronik_center_poll_interval_ms">
+            </div>
+
+            <label for="parktronik_center_poll_count" class="col-md-4 col-form-label" translate>PARKTRONIK_CENTER_POLL_COUNT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikCenterPollCount" type="number"
+                       class="form-control form-control-sm" id="parktronik_center_poll_count" name="parktronik_center_poll_count">
+            </div>
+
+            <div class="col-md-12">
+                <h5 class="weightbridge-submodal">Выезд</h5>
+            </div>
+
+            <label for="parktronik_exit_ip" class="col-md-4 col-form-label" translate>PARKTRONIK_EXIT_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikExitIp" type="text"
+                       class="form-control form-control-sm" id="parktronik_exit_ip" name="parktronik_exit_ip">
+            </div>
+
+            <label for="parktronik_exit_port" class="col-md-4 col-form-label" translate>PARKTRONIK_EXIT_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.parktronikExitPort" type="number"
+                       class="form-control form-control-sm" id="parktronik_exit_port" name="parktronik_exit_port">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Светофоры</h4>
+
+            <div class="col-md-12">
+                <h5 class="weightbridge-submodal">Въезд</h5>
+            </div>
+
+            <label for="traffic_light_entry_ip" class="col-md-4 col-form-label" translate>TRAFFIC_LIGHT_ENTRY_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.trafficLightEntryIp" type="text"
+                       class="form-control form-control-sm" id="traffic_light_entry_ip" name="traffic_light_entry_ip">
+            </div>
+
+            <label for="traffic_light_entry_port" class="col-md-4 col-form-label" translate>TRAFFIC_LIGHT_ENTRY_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.trafficLightEntryPort" type="number"
+                       class="form-control form-control-sm" id="traffic_light_entry_port" name="traffic_light_entry_port">
+            </div>
+
+            <div class="col-md-12">
+                <h5 class="weightbridge-submodal">Выезд</h5>
+            </div>
+
+            <label for="traffic_light_exit_ip" class="col-md-4 col-form-label" translate>TRAFFIC_LIGHT_EXIT_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.trafficLightExitIp" type="text"
+                       class="form-control form-control-sm" id="traffic_light_exit_ip" name="traffic_light_exit_ip">
+            </div>
+
+            <label for="traffic_light_exit_port" class="col-md-4 col-form-label" translate>TRAFFIC_LIGHT_EXIT_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.trafficLightExitPort" type="number"
+                       class="form-control form-control-sm" id="traffic_light_exit_port" name="traffic_light_exit_port">
+            </div>
+        </div>
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Камера диспетчерской (офис)</h4>
+
+            <label for="camera_office_ip" class="col-md-4 col-form-label" translate>CAMERA_OFFICE_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraOfficeIp" type="text"
+                       class="form-control form-control-sm" id="camera_office_ip" name="camera_office_ip">
+            </div>
+
+            <label for="camera_office_port" class="col-md-4 col-form-label" translate>CAMERA_OFFICE_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraOfficePort" type="number"
+                       class="form-control form-control-sm" id="camera_office_port" name="camera_office_port">
+            </div>
+
+            <label for="camera_office_user" class="col-md-4 col-form-label" translate>CAMERA_OFFICE_USER</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraOfficeUser" type="text"
+                       class="form-control form-control-sm" id="camera_office_user" name="camera_office_user">
+            </div>
+
+            <label for="camera_office_pass" class="col-md-4 col-form-label" translate>CAMERA_OFFICE_PASS</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraOfficePass" type="text"
+                       class="form-control form-control-sm" id="camera_office_pass" name="camera_office_pass">
+            </div>
+
+            <label for="office_crop_rect" class="col-md-4 col-form-label" translate>OFFICE_CROP_RECT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.officeCropRect" type="text" placeholder="x,y,width,height"
+                       class="form-control form-control-sm" id="office_crop_rect" name="office_crop_rect">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Центральная камера (вид сверху на груз)</h4>
+
+            <label for="camera_cargo_top_ip" class="col-md-4 col-form-label" translate>CAMERA_CARGO_TOP_IP</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraCargoTopIp" type="text"
+                       class="form-control form-control-sm" id="camera_cargo_top_ip" name="camera_cargo_top_ip">
+            </div>
+
+            <label for="camera_cargo_top_port" class="col-md-4 col-form-label" translate>CAMERA_CARGO_TOP_PORT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraCargoTopPort" type="number"
+                       class="form-control form-control-sm" id="camera_cargo_top_port" name="camera_cargo_top_port">
+            </div>
+
+            <label for="camera_cargo_top_user" class="col-md-4 col-form-label" translate>CAMERA_CARGO_TOP_USER</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraCargoTopUser" type="text"
+                       class="form-control form-control-sm" id="camera_cargo_top_user" name="camera_cargo_top_user">
+            </div>
+
+            <label for="camera_cargo_top_pass" class="col-md-4 col-form-label" translate>CAMERA_CARGO_TOP_PASS</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cameraCargoTopPass" type="text"
+                       class="form-control form-control-sm" id="camera_cargo_top_pass" name="camera_cargo_top_pass">
+            </div>
+
+            <label for="cargo_top_crop_rect" class="col-md-4 col-form-label" translate>CARGO_TOP_CROP_RECT</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.cargoTopCropRect" type="text" placeholder="x,y,width,height"
+                       class="form-control form-control-sm" id="cargo_top_crop_rect" name="cargo_top_crop_rect">
+            </div>
+
+            <label for="cargo_top_prompt" class="col-md-4 col-form-label" translate>CARGO_TOP_PROMPT</label>
+            <div class="form-group col-md-8">
+            <textarea ng-model="item.cargoTopPrompt"
+                      class="form-control form-control-sm" id="cargo_top_prompt" name="cargo_top_prompt"
+                      rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Telegram уведомления</h4>
+
+            <label for="chat_id" class="col-md-4 col-form-label" translate>CHAT_ID</label>
+            <div class="form-group col-md-8">
+                <input ng-model="item.chatId" type="number"
+                       class="form-control form-control-sm" id="chat_id" name="chat_id">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <h4 class="income-log-modal col-md-12">Статус и мониторинг</h4>
+
+            <label for="is_online" class="col-md-4 col-form-label" translate>IS_ONLINE</label>
+            <div class="form-group col-md-8">
+                <select ng-class="{'is-invalid':(weightbridgeForm.is_online.$error.required) && (weightbridgeForm.is_online.$touched || weightbridgeForm.$submitted)}"
+                        type="text" id="is_online" name="is_online" class="form-control form-control-sm"
+                        ng-model="item.online">
+                    <option  ng-value="true">Online</option>
+                    <option  ng-value="false">Offline</option>
+                </select>
+            </div>
+
+            <label for="last_seen" class="col-md-4 col-form-label" translate>LAST_SEEN</label>
+            <div class="form-group col-md-8">
+                <input type="text" class="form-control form-control-sm" ng-model="item.lastSeen"
+                       id="last_seen" name="last_seen"
+                       date-time ui-mask="9999-99-99 99:99:99" placeholder="YYYY-MM-DD HH:mm:ss" model-view-value="true">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">
+            <i role="button" class="bi bi-check"></i>
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">
+            <i role="button" class="bi bi-x"></i>
+        </button>
+    </div>
+</form>

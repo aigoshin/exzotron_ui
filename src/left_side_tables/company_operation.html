@@ -1,0 +1,35 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <div class="p-2">
+        <div class="form-check form-check-inline">
+            <button ng-if="companyOperations" class="btn btn-sm btn-info" ng-click="exportCompanyOperationsExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+        </div>
+    </div>
+    <table rz-table id="rfid_objects_enrol_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th><span ts-criteria="id" translate>ID</span></th>
+            <th><span ts-criteria="dateTime" translate>DATE</span></th>
+            <th><span ts-criteria="rfidName" translate>NAME</span></th>
+            <th><span ts-criteria="objectName" translate>NODE_NAME</span></th>
+            <th><span ts-criteria="exLogOperationsId" translate>OPERATION_ID</span></th>
+            <th><span ts-criteria="account" translate>RFID</span></th>
+            <th><span ts-criteria="debit" translate>DEBIT</span></th>
+            <th><span ts-criteria="credit" translate>CREDIT</span></th>
+            <th><span ts-criteria="count" translate="BALANCE"></span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in companyOperations" ts-repeat>
+            <td ng-bind="item.id"></td>
+            <td ng-bind="item.dateTime"></td>
+            <td ng-bind="item.rfidName"></td>
+            <td ng-bind="item.objectName"></td>
+            <td ng-bind="item.exLogOperationsId"></td>
+            <td ng-bind="item.account"></td>
+            <td ng-bind="item.debit|number:2"></td>
+            <td ng-bind="item.credit|number:2"></td>
+            <td ng-bind="item.count|number:2"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

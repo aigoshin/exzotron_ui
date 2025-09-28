@@ -1,0 +1,306 @@
+<div data-split-pane data-split-pane-properties="balanceSplitPaneProperties">
+    <div data-split-pane-component data-height="60%" class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="shadow">
+                <table  class="table table-borderless table-striped table-hover account-operations-table table-fit">
+                    <thead class="thead-dark">
+                    <tr ng-if="!groupByObjects">
+                        <th scope="col" class="align-middle border-0"><span class="bi bi-gear mr-1" column-chooser="balanceTable" fire="{{selectedRfidObject||accountOperations+search}}"></span>ID</th>
+                        <th scope="col" class="align-middle border-0" translate>DATE</th>
+                        <th scope="col" class="align-middle border-0" translate>ACCOUNT</th>
+                        <th scope="col" class="align-middle border-0">RFID</th>
+                        <th scope="col" class="align-middle border-0" translate>DEBIT</th>
+                        <th scope="col" class="align-middle border-0" translate>ISSUED</th>
+                        <th scope="col" class="align-middle border-0" translate>BALANCE</th>
+                        <th scope="col" class="align-middle border-0" translate>TOTALS</th>
+                        <th scope="col" class="align-middle border-0" translate>OBJECT</th>
+                        <th scope="col" class="align-middle border-0" translate>MACHINE_RFID</th>
+                        <th scope="col" class="align-middle border-0" translate>VEHICLE</th>
+                        <th scope="col" class="align-middle border-0" translate>CONTRACTOR</th>
+                        <th scope="col" class="align-middle border-0" translate>TANK_START</th>
+                        <th scope="col" class="align-middle border-0" translate>TANK_END</th>
+                        <th scope="col" class="align-middle border-0" ng-dblclick="setLoadApi()" tooltip-append-to-body="true" uib-tooltip="Двойное нажатие на заголовок в таблице запускает пересчет ВСЕХ записей за период" translate>FUELED</th>
+                        <th scope="col" class="align-middle border-0" translate>DEVIATION</th>
+                        <th scope="col" class="align-middle border-0" translate>PRICE</th>
+                        <th scope="col" class="align-middle border-0" translate>TOTAL_SUM</th>
+                        <th scope="col" class="align-middle border-0" translate>GROSS</th>
+                        <th scope="col" class="align-middle border-0" translate>NET</th>
+                        <th scope="col" class="align-middle border-0" translate>TARE</th>
+                    </tr>
+                    <tr ng-if="groupByObjects">
+                        <th scope="col" class="align-middle border-0"><span class="bi bi-gear mr-1" column-chooser="balanceTableByObjects" fire="{{selectedRfidObject||accountOperations+search}}"></span>ID</th>
+                        <th scope="col" class="align-middle border-0" translate>DATE</th>
+                        <th scope="col" class="align-middle border-0" translate>ACCOUNT</th>
+                        <th scope="col" class="align-middle border-0" translate="NAME"></th>
+                        <th scope="col" class="align-middle border-0" translate>ISSUED</th>
+                        <th scope="col" class="align-middle border-0" translate>TOTALS</th>
+                        <th scope="col" class="align-middle border-0" translate>MACHINE_RFID</th>
+                        <th scope="col" class="align-middle border-0" translate>VEHICLE</th>
+                        <th scope="col" class="align-middle border-0" translate>CONTRACTOR</th>
+                        <th scope="col" class="align-middle border-0" translate>TANK_START</th>
+                        <th scope="col" class="align-middle border-0" translate>TANK_END</th>
+                        <th scope="col" class="align-middle border-0" ng-dblclick="setLoadApi()"  tooltip-append-to-body="true" uib-tooltip="Двойное нажатие на заголовок в таблице запускает пересчет ВСЕХ записей за период" translate>FUELED</th>
+                        <th scope="col" class="align-middle border-0" translate>DEVIATION</th>
+                        <th scope="col" class="align-middle border-0" translate>COUNT</th>
+                        <th scope="col" class="align-middle border-0" translate>PRICE</th>
+                        <th scope="col" class="align-middle border-0" translate>TOTAL_SUM</th>
+                        <th scope="col" class="align-middle border-0" translate>GROSS</th>
+                        <th scope="col" class="align-middle border-0" translate>NET</th>
+                        <th scope="col" class="align-middle border-0" translate>TARE</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-if="ui.loaded && accountOperations">
+                    <tr ng-if="!groupByObjects && accountOperations.length>0"
+                        ng-class="selectedAccountOperation && selectedAccountOperation.accountOperationId == accountOperation.accountOperationId?'badge-secondary':''"
+                        ng-repeat="accountOperation in accountOperations | filter: search | filter: filterByRfid"
+                        ng-click="selectAccountOperation(accountOperation)">
+                        <td class="align-middle" ng-bind="accountOperation.accountOperationId"></td>
+                        <td class="align-middle" ng-bind="accountOperation.dateTime"></td>
+                        <td class="align-middle" ng-bind="accountOperation.account"></td>
+                        <td class="align-middle" ng-bind="accountOperation.rfidName"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.debit  | number : 2"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.credit | number : 2"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.count"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.totalAccount"></td>
+                        <td class="align-middle" ng-bind="accountOperation.objectName"></td>
+                        <td class="align-middle" ng-class="{'font-weight-bold':accountOperation.vehicleImei}"
+                            ng-bind="accountOperation.rfidVehicle"
+                            ng-click="showVehicleModal(accountOperation)"></td>
+                        <td class="align-middle" ng-class="{'font-weight-bold':accountOperation.vehicleImei}"
+                            ng-click="showVehicleSelect(accountOperation)">
+                            <span ng-bind="accountOperation.vehicleName" ng-if="ui.showVehicleSelectId!=accountOperation.accountOperationId" >
+
+                            </span>
+                            <div ng-if="ui.showVehicleSelectId==accountOperation.accountOperationId" class="width-100">
+                                <ui-select ng-model="accountOperation.vehicleName"
+                                           autofocus="true" class="width-100"
+                                           theme="select2"
+                                           on-select="saveVehicle($item, $model, accountOperation)">
+                                    <ui-select-match placeholder="Введите название авто...">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="vehicle.name as vehicle in ui.vehicles track by $index"
+                                                       refresh="getVehicles($select.search)"
+                                                       refresh-delay="500">
+                                        <span ng-bind-html="vehicle.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </td>
+                        <td class="align-middle" ng-bind="accountOperation.partnerName"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.tankStart===0?'':(accountOperation.tankStart | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.tankEnd===0?'':(accountOperation.tankEnd | number : 2)"></td>
+                        <td ng-if="!accountOperation.inProgress" class="align-middle td-hover text-right" ng-click="$event.stopPropagation();" tooltip-append-to-body="true" uib-tooltip="Двойное нажатие запускает пересчет"
+                            ng-dblclick="setLoadApi(accountOperation)"
+                            ng-bind="accountOperation.tank===0?'':(accountOperation.tank | number : 2)"></td>
+                        <td ng-if="accountOperation.inProgress" style="float: left;margin: 8px;">
+                            <span class="position-relative d-block" style="bottom: 2px" us-spinner="{width:0.7}" spinner-key="item.id" spinner-start-active="true"></span>
+                        </td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.deviation | number : 2"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.price===0?'':(accountOperation.price | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.totalAmount===0?'':(accountOperation.totalAmount | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.grossWeight===0?'':(accountOperation.grossWeight | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.netWeight===0?'':(accountOperation.netWeight | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.tareWeight===0?'':(accountOperation.tareWeight | number : 2)"></td>
+                    </tr>
+
+                    <tr ng-if="groupByObjects && accountOperations.length>0"
+                        ng-class="selectedAccountOperation && selectedAccountOperation.accountOperationId == accountOperation.accountOperationId?'badge-secondary':''"
+                        ng-repeat="accountOperation in accountOperations | filter: search | filter: filterByRfid"
+                        ng-click="selectAccountOperation(accountOperation)">
+                        <td class="align-middle" ng-bind="accountOperation.accountOperationId"></td>
+                        <td class="align-middle" ng-bind="accountOperation.dateTime"></td>
+                        <td class="align-middle" ng-bind="accountOperation.account"></td>
+                        <td class="align-middle" ng-bind="accountOperation.rfidName"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.credit | number : 2"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.totalAccount"></td>
+                        <td class="align-middle" ng-bind="accountOperation.rfidVehicle"></td>
+                        <td class="align-middle" ng-class="{'font-weight-bold':accountOperation.vehicleImei}" ng-bind="accountOperation.vehicleName"></td>
+                        <td class="align-middle" ng-bind="accountOperation.partnerName"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.tankStart===0?'':(accountOperation.tankStart | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.tankEnd===0?'':(accountOperation.tankEnd | number : 2)"></td>
+                        <td ng-if="!accountOperation.inProgress" class="align-middle td-hover text-right" ng-click="$event.stopPropagation();" tooltip-append-to-body="true" uib-tooltip="Двойное нажатие запускает пересчет"
+                            ng-dblclick="setLoadApi(accountOperation)"
+                            ng-bind="accountOperation.tank===0?'':(accountOperation.tank | number : 2)"></td>
+                        <td ng-if="accountOperation.inProgress" style="float: left;margin: 8px;">
+                            <span class="position-relative d-block" style="bottom: 2px" us-spinner="{width:0.7}" spinner-key="item.id" spinner-start-active="true"></span>
+                        </td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.deviation | number : 2"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.quantity | number : 2"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.price===0?'':(accountOperation.price | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.totalAmount===0?'':(accountOperation.totalAmount | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.grossWeight===0?'':(accountOperation.grossWeight | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.netWeight===0?'':(accountOperation.netWeight | number : 2)"></td>
+                        <td class="align-middle text-right" ng-bind="accountOperation.tareWeight===0?'':(accountOperation.tareWeight | number : 2)"></td>
+                    </tr>
+                    <tr ng-init="initNewOperation()" ng-if="selectedRfidObject && !groupByObjects">
+                        <td></td>
+                        <td class="align-middle" colspan="3">
+                            <div class="input-group">
+                                <input disabled maxlength="100" type="text" placeholder="RFID" class="form-control form-control-sm" ng-model="newOperation.rfid">
+                            </div>
+                        </td>
+                        <td class="align-middle" colspan="2">
+                            <div class="input-group">
+                                <input max="999999" type="number" placeholder="Количество" class="form-control form-control-sm" ng-model="newOperation.count">
+                            </div>
+                        </td>
+                        <td colspan="18" class="align-middle">
+                            <button class="btn btn-success btn-sm" ng-disabled="!newOperation.rfid || !newOperation.count || !newOperation.idProduct" ng-click="moveCount()"><i class="bi bi-plus"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div data-split-pane-divider data-height="5px"></div>
+    <div data-split-pane-component class="bg-light" element-size pcth="70" id="chartPane">
+        <div class="pretty-split-pane-component-inner">
+            <div ng-show="showVehicleChart">
+                <div class="col col-12">
+                    <div class="row" ng-if="!wialonReport">
+                        <div class="col-12">
+                            <button class="btn btn-sm btn-info" ng-click="exportChartData()">
+                                <i class="bi bi-file-earmark-spreadsheet"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="!wialonReport">
+                        <div class="col-12">
+                            <div class="h4 mb-2 mr-2 text-center">
+                                <span class="h5 ml-3 text-success" ng-bind="'Объект: '"></span><span class="h5" ng-bind="vehicleName"></span>
+                                <span class="h5 ml-3 text-success" ng-bind="'Выдано: '"></span><span class="h5" ng-bind="credit | number : 2"></span>
+                                <span class="h5 ml-3 text-success" ng-bind="'Заправлено: '"></span><span class="h5" ng-bind="log | number : 2"></span>
+                                <span class="h5 ml-3 text-success" ng-bind="'Отклонение: '"></span><span class="h5" ng-bind="diff | number : 2"></span>
+                                <span class="h5 ml-3 text-success" ng-bind="'%: '"></span><span class="h5" ng-bind="diffPct | number : 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row account-operations-chart" ng-if="wialonReport">
+                        <div class="col-12">
+                            <table class="table table-borderless table-sm">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" ng-click="exportChartData()">
+                                            <i class="bi bi-file-earmark-spreadsheet"></i>
+                                        </button>
+                                    </td>
+                                    <td colspan="16" class="text-center font-weight-bold" ng-bind="'Отчет по объекту: ' + vehicleName"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="16" class="text-center"
+                                        ng-bind="'за период с ' + wialonReport.from + ' по ' + wialonReport.to + ' (UTC +' + wialonReport.utc + ')'"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered border-right border-left border-bottom table-sm">
+                                <tr class="font-weight-bold bg-secondary">
+                                    <td colspan="17" class="text-center">Расход топлива за период между заправками</td>
+                                </tr>
+                                <tr class="font-weight-bold">
+                                    <td colspan="2" class="text-center">Уровень (л)</td>
+                                    <td colspan="5" class="text-center">Движение</td>
+                                    <td colspan="3" class="text-center">Работа на стоянке</td>
+                                    <td colspan="2" class="text-center">Скорость</td>
+                                    <td colspan="5" class="text-center">Общие показатели</td>
+                                </tr>
+                                <tr class="font-weight-bold">
+                                    <td class="text-center">начало</td>
+                                    <td class="text-center">конец</td>
+
+                                    <td class="text-center">Расход (л)</td>
+                                    <td class="text-center">Ср. расход на 100 км</td>
+                                    <td class="text-center">Норма на 100 км</td>
+                                    <td class="text-center">Пробег (км)</td>
+                                    <td class="text-center">Время</td>
+
+                                    <td class="text-center">Расход (л)</td>
+                                    <td class="text-center">Ср. на 1 час (л)</td>
+                                    <td class="text-center">Время</td>
+
+                                    <td class="text-center">средняя (км)</td>
+                                    <td class="text-center">максим. (км)</td>
+
+                                    <td class="text-center">Моточасы</td>
+                                    <td class="text-center">расход по баку (л)</td>
+                                    <td class="text-center">расход по двс.</td>
+                                    <td class="text-center">отклонение (л)</td>
+                                    <td class="text-center">%</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td ng-bind="stringToNumber(statData['Нач. уровень топлива'])|number:2"></td>
+                                    <td ng-bind="stringToNumber(statData['Кон. уровень топлива'])|number:2"></td>
+
+                                    <td ng-bind="stringToNumber(statData['Потрачено по ДУТ'])|number:2"></td>
+                                    <td ng-bind="(stringToNumber(statData['Потрачено по ДУТ'])/stringToNumber(statData['Пробег в поездках'])*100)|number:2"></td>
+                                    <td></td>
+                                    <td ng-bind="stringToNumber(statData['Пробег в поездках'])|number:2"></td>
+                                    <td ng-bind="statData['Моточасы в движении']"></td>
+
+                                    <td ng-bind="0"></td>
+                                    <td></td>
+                                    <td ng-bind="statData['Моточасы на холостом ходу']"></td>
+
+                                    <td ng-bind="stringToNumber(statData['Средняя скорость в поездках'])|number:0"></td>
+                                    <td ng-bind="stringToNumber(statData['Макс. скорость в поездках'])|number:0"></td>
+
+                                    <td ng-bind="statData['Моточасы']"></td>
+                                    <td ng-bind="stringToNumber(statData['Потрачено по ДУТ']) - 0|number:2"></td>
+                                    <td ng-dblclick="editConsumptionByDvs(wialonReport)">
+                                        <span ng-bind="wialonReport.consumptionByDvs|number:2" ng-if="!showDvsInput"></span>
+                                        <div class="input-group" ng-if="showDvsInput">
+                                            <input class="form-control form-control-sm" ng-model="newDvsVal" on-enter-press="saveVehicleMultiplier(newDvsVal)"
+                                                   on-escape="revertMultiplierChanges()">
+                                        </div>
+                                    </td>
+                                    <td ng-bind="stringToNumber(statData['Потрачено по ДУТ']) - 0 - wialonReport.consumptionByDvs|number:2"></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row account-operations-chart" ng-if="wialonReport">
+                        <div class="col-8">
+                            <table class="table table-bordered table-sm">
+                                <tbody>
+                                <tr class="font-weight-bold bg-secondary">
+                                    <td colspan="8" class="text-center">Заправка в бак</td>
+                                </tr>
+                                <tr class="font-weight-bold">
+                                    <td class="text-center">Дата</td>
+                                    <td class="text-center">Время</td>
+
+                                    <td class="text-center">начало (л)</td>
+                                    <td class="text-center">конец (л)</td>
+                                    <td class="text-center">выдано (л)</td>
+                                    <td class="text-center">поступило (л)</td>
+
+                                    <td class="text-center">отклонение (л)</td>
+                                    <td class="text-center">%</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td ng-bind="wialonReport.dateTime.split(' ')[0]"></td>
+                                    <td ng-bind="wialonReport.dateTime.split(' ')[1]"></td>
+
+                                    <td ng-bind="wialonReport.tankStart|number:2"></td>
+                                    <td ng-bind="wialonReport.tankEnd|number:2"></td>
+                                    <td ng-bind="wialonReport.credit|number:2"></td>
+                                    <td ng-bind="wialonReport.income|number:2"></td>
+
+                                    <td ng-bind="wialonReport.income-wialonReport.credit|number:2"></td>
+                                    <td ng-bind="(wialonReport.income-wialonReport.credit)/wialonReport.credit*100|number:2"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div id="chartdiv" class="chartdiv" ng-style="chartPane"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,216 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+        <thead class="thead-dark">
+        <tr>
+            <th ts-criteria="usersId" scope="col" class="align-middle border-0" translate>ID</th>
+            <th ts-criteria="companyName" scope="col" class="align-middle border-0" translate>COMPANY</th>
+            <th ts-criteria="usersName" scope="col" class="align-middle border-0" translate>LOGIN</th>
+            <th ts-criteria="usersPass" scope="col" class="align-middle border-0" translate>PASSWORD</th>
+            <th ts-criteria="usersOwner" scope="col" class="align-middle border-0" translate>OWNER</th>
+            <th ts-criteria="usersPhone" scope="col" class="align-middle border-0" translate>PHONE</th>
+            <th ts-criteria="usersEmail" scope="col" class="align-middle border-0" translate>EMAIL</th>
+            <th ts-criteria="userRole" scope="col" class="align-middle border-0" translate>ROLE</th>
+            <th ts-criteria="telegram" scope="col" class="align-middle border-0" translate>TELEGRAM</th>
+            <th ts-criteria="firstName" scope="col" class="align-middle border-0" translate>FIRST_NAME</th>
+            <th ts-criteria="lastName" scope="col" class="align-middle border-0" translate>LAST_NAME</th>
+            <th ts-criteria="patronymic" scope="col" class="align-middle border-0" translate>PATRONYMIC</th>
+            <th ts-criteria="menuName" scope="col" class="align-middle border-0" translate>MENU</th>
+            <th ts-criteria="divisionName" scope="col" class="align-middle border-0" translate>DIVISION</th>
+            <th></th>
+            <th ts-criteria="partnerName" scope="col" class="align-middle border-0" translate>CONTRACTOR</th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in users | filter: search | orderBy : '-usersOwner'" ts-repeat>
+            <td class="align-middle">
+                <span ng-bind="item.usersId"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.companyName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.companyId">
+                        <option ng-repeat="company in companies | orderBy : 'name'" ng-value="company.id">{{company.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.usersName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.usersName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="'***'" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.usersPass">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.usersOwner"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.usersPhone" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.usersPhone">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.usersEmail" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.usersEmail">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.userRole" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.userRoleId">
+                        <option ng-repeat="role in userRoles" ng-value="role.id">{{role.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.telegram"></span>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.firstName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.firstName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.lastName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.lastName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.patronymic" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="selectedItem.patronymic">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.menuName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.menuDepth">
+                        <option ng-repeat="menu in menuItems" ng-value="menu.menuId">{{menu.displayName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.currentDivisionName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.currentDivisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <div  ng-if="selectedItem.usersId != item.usersId" class="input-group" tooltip-append-to-body="true" uib-tooltip="Зафиксировать подразделение">
+                    <input ng-disabled="true" type="checkbox" ng-model="item.fixedDivision">
+                </div>
+
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <input type="checkbox" ng-model="selectedItem.fixedDivision" ng-change="item.fixedDivision=selectedItem.fixedDivision">
+                </div>
+            </td>
+            <td class="align-middle">
+                <span ng-bind="item.partnerName" ng-if="selectedItem.usersId != item.usersId"></span>
+                <div class="input-group" ng-if="selectedItem.usersId == item.usersId">
+                    <select type="text" class="form-control form-control-sm" ng-model="selectedItem.partnerId">
+                        <option ng-repeat="partner in partners" ng-value="partner.id">{{partner.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td ng-show="selectedItem.usersId != item.usersId" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="edit(item)"></i></td>
+            <td ng-show="selectedItem.usersId != item.usersId" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="delete(item)"></i></td>
+            <td ng-show="selectedItem.usersId == item.usersId" colspan="2" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="align-middle"></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.companyId">
+                        <option ng-repeat="company in companies | orderBy : 'name'" ng-value="company.id">{{company.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.usersName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.usersPass">
+                </div>
+            </td>
+            <td class="align-middle"></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.usersPhone">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.usersEmail">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.userRoleId">
+                        <option ng-repeat="role in userRoles" ng-value="role.id">{{role.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle"></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.firstName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.lastName">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input type="text" maxlength="50" class="form-control form-control-sm" ng-model="newItem.patronymic">
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.menuDepth">
+                        <option ng-repeat="menu in menuItems" ng-value="menu.menuId">{{menu.displayName}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.currentDivisionId">
+                        <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <select type="text" class="form-control form-control-sm" ng-model="newItem.partnerId">
+                        <option ng-repeat="partner in partners" ng-value="partner.id">{{partner.name}}</option>
+                    </select>
+                </div>
+            </td>
+            <td colspan="4" class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newItem.usersEmail || !newItem.usersPass || !newItem.usersName" ng-click="add()"><i class="bi bi-plus"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

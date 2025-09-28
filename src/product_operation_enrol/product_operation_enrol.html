@@ -1,0 +1,59 @@
+<div class="main-table-wrapper overflow-auto shadow table-responsive">
+    <table class="table table-borderless table-striped table-hover account-operations-table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="align-middle border-0">ID</th>
+            <th scope="col" class="align-middle border-0" translate>DATE</th>
+            <th scope="col" class="align-middle border-0" translate>ACCOUNT</th>
+            <th scope="col" class="align-middle border-0" translate="NAME"></th>
+            <th scope="col" class="align-middle border-0" translate>USER</th>
+            <th scope="col" class="align-middle border-0" translate>DEBIT</th>
+            <th scope="col" class="align-middle border-0" translate="COMMENT"></th>
+            <th scope="col" class="align-middle border-0"></th>
+            <th scope="col" class="align-middle border-0"></th>
+        </tr>
+        </thead>
+        <tbody ng-if="accountOperations">
+        <tr ng-if="accountOperations.length>0"
+            ng-class="selectedAccountOperation && selectedAccountOperation.accountOperationId == accountOperation.accountOperationId?'badge-secondary':''"
+            ng-repeat="accountOperation in accountOperations | filter: search"
+            ng-click="selectAccountOperation(accountOperation)">
+            <td class="align-middle" ng-bind="accountOperation.accountOperationId"></td>
+            <td class="align-middle" ng-bind="accountOperation.dateTime"></td>
+            <td class="align-middle" ng-bind="accountOperation.account"></td>
+            <td class="align-middle" ng-bind="accountOperation.rfidName"></td>
+            <td class="align-middle" ng-bind="accountOperation.userName"></td>
+            <td class="align-middle" ng-bind="accountOperation.debit  | number : 2"></td>
+            <td class="align-middle" ng-bind="accountOperation.description"></td>
+            <td ng-show="editableItem.accountOperationId != accountOperation.accountOperationId" class="align-middle width-25"><i ng-if="false" role="button" class="bi bi-pencil" ng-click="edit(accountOperation)"></i></td>
+            <td ng-show="editableItem.accountOperationId != accountOperation.accountOperationId" class="align-middle width-25"><i role="button" class="bi" ng-class="accountOperation.toDelete?'bi-arrow-counterclockwise':'bi-trash'" ng-click="$event.stopPropagation();toggleDeleteStatus(accountOperation)"></i></td>
+            <td ng-show="editableItem.accountOperationId == accountOperation.accountOperationId" colspan="2" class="align-middle">
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                    <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                </div>
+            </td>
+        </tr>
+        <tr ng-init="initNewOperation()">
+            <td></td>
+            <td></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input maxlength="100" type="text" placeholder="RFID" class="form-control form-control-sm" ng-model="newOperation.rfid">
+                </div>
+            </td>
+            <td></td>
+            <td></td>
+            <td class="align-middle">
+                <div class="input-group">
+                    <input max="999999" type="number" placeholder="Количество" class="form-control form-control-sm" ng-model="newOperation.count">
+                </div>
+            </td>
+            <td class="align-middle">
+                <button class="btn btn-success btn-sm" ng-disabled="!newOperation.rfid || !newOperation.count || !newOperation.idProduct" ng-click="moveCount()"><i class="bi bi-plus"></i></button>
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

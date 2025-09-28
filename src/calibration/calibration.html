@@ -1,0 +1,104 @@
+<div data-split-pane data-split-pane-properties="calibrationSplitPaneProperties">
+    <div data-split-pane-component data-height="60%" class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="main-table-wrapper overflow-auto shadow table-responsive">
+                <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+                    <thead class="thead-dark">
+                    <tr>
+                        <th ts-criteria="id" scope="col" class="align-middle border-0" translate>ID</th>
+                        <th ts-criteria="regDate" ts-default scope="col" class="align-middle border-0" translate>DATE</th>
+                        <th ts-criteria="userName" scope="col" class="align-middle border-0" translate>USER</th>
+                        <th ts-criteria="company" scope="col" class="align-middle border-0" translate>COMPANY</th>
+                        <th ts-criteria="manager" scope="col" class="align-middle border-0" translate>MANAGER</th>
+                        <th ts-criteria="automobile" scope="col" class="align-middle border-0" translate>VEHICLE</th>
+                        <th ts-criteria="comment" scope="col" class="align-middle border-0" translate>COMMENT</th>
+                        <th ts-criteria="volume" scope="col" class="align-middle border-0" translate>VOLUME</th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in calibrationLog | filter: search" ts-repeat
+                        ng-click="setCurrentCalibration(item)"
+                        ng-class="currentCalibration && item.id == currentCalibration.id ? 'badge-secondary' : ''">
+                        <td class="align-middle width-25">
+                            <span ng-bind="item.id"></span>
+                        </td>
+                        <td class="align-middle width-100">
+                            <span ng-bind="item.regDate"></span>
+
+                        </td>
+                        <td class="align-middle width-100">
+                            <span ng-bind="item.userName"></span>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.company" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedItem.company">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.manager" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedItem.manager">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.automobile" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="text" class="form-control form-control-sm"
+                                       ng-model="selectedItem.automobile">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.comment" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedItem.comment">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="item.volume | number : 2"></span>
+                        </td>
+                        <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" ng-class="item.id == currentCalibration.id ? 'bi bi-star-fill' : 'bi  bi-star'"></i>
+                        </td>
+                        <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="edit(item)"></i>
+                        </td>
+                        <td ng-show="selectedItem.id == item.id" colspan="2" class="align-middle">
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm" ng-click="save()"><i class="bi bi-check"></i></button>
+                                <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div data-split-pane-divider data-height="5px"></div>
+    <div data-split-pane-component class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <h4 ng-show="!photos.length" class="text-center">Нет фото</h4>
+            <div ng-show="currentCalibration && photos">
+                <div class="col col-12 p-3" style="display: flex">
+                    <div ng-show="photos && photos.length" class="photo-preview-container width-100">
+                        <table>
+                            <tr ng-repeat="photo in photos">
+                                <td>
+                                    <div ng-click="selectPhoto(photo)" style="cursor: pointer">
+                                        <img ng-src="{{'data:image/png;base64,'+ photo.file}}"
+                                             class="rounded float-left img-thumbnail width-100"
+                                             alt="{{photo.fileName}}">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div ng-if="selectedPhoto">
+                        <img ng-src="{{'data:image/png;base64,'+ selectedPhoto.file}}"  class="rounded img-thumbnail" alt="{{selectedPhoto.fileName}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

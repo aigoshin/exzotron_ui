@@ -1,0 +1,55 @@
+<div class="bg-light">
+    <div class="A4 mt-5 shadow album" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+                <div class="custom-control custom-checkbox p-1">
+                    <input class="form-check-input custom-control-input" ng-change="showAll!=showAll" type="checkbox" ng-model="showAll" id="showAll">
+                    <label class="form-check-label custom-control-label" for="showAll" translate>ALL</label>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportPdf()"><i class="bi bi-file-earmark-pdf"></i></button>
+        </div>
+        <div>
+            <table class="w-100 table table-bordered border-dark" ng-repeat="(key, value) in items">
+                <thead>
+                <tr>
+                    <td colspan="10">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_INCOME_OBJECT" translate-values='{item: "{{value.length?value[0].objectName:key}}"}'></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="headers">
+                    <th scope="col" class="align-middle" translate>DATE</th>
+                    <th scope="col" class="align-middle" translate>NAME</th>
+                    <th scope="col" class="align-middle" translate>VEHICLE</th>
+                    <th scope="col" class="align-middle" translate>ISSUED</th>
+                    <th scope="col" class="align-middle" translate>TANK_START</th>
+                    <th scope="col" class="align-middle" translate>TANK_END</th>
+                    <th scope="col" class="align-middle" translate>FUELED</th>
+                    <th scope="col" class="align-middle" translate>DEVIATION</th>
+                    <th scope="col" class="align-middle">%</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in value | filter:showEmptyVehicles" ng-class="item.totals?'bg-info border-info':''">
+                    <td class="align-middle col-2" ng-bind="item.totals?'Итого:': formatDate(item.dateTime, 'YYYY-MM-DD HH:mm')"></td>
+                    <td class="align-middle col-3" ng-bind="item.rfidName"></td>
+                    <td class="align-middle col-3" ng-bind="item.vehicleName"></td>
+                    <td class="align-middle" ng-bind="item.credit | number:2"></td>
+                    <td class="align-middle" ng-bind="item.tankStart | number:2"></td>
+                    <td class="align-middle" ng-bind="item.tankEnd | number:2"></td>
+                    <td class="align-middle" ng-bind="item.tank | number:2"></td>
+                    <td class="align-middle" ng-bind="item.deviation | number:2"></td>
+                    <td class="align-middle" ng-bind="-item.deviationPct | number:2"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

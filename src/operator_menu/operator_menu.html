@@ -1,0 +1,40 @@
+<div data-split-pane data-split-pane-properties="operatorMenuSplitPaneProperties" class="operator-menu">
+    <div data-split-pane-component data-height="80%" class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="container-fluid mt-2">
+                <div class="row row-cols-md-5">
+                    <div class="col mb-4 fixed-card" ng-repeat="item in items" ng-click="selectNode(item)">
+                        <div class="card h-100 shadow">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 my-auto">
+                                    <div class="text-center font-weight-bold p-1" style="height: 150px">
+                                       <p>{{item.nodeName}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-cols-md-5">
+                    <div class="col mb-4 fixed-card" ng-repeat="item in items" ng-click="selectNode(item)">
+                        <div class="col-md-12 my-auto">
+                            <div class="tank-circle mx-auto shadow">
+                                <div class="position-absolute tank-pct" ng-bind="(item.levelPct | number: 2 )+ '%'"></div>
+                                <div class="volume" ng-style="{height:100-item.levelPct + '%'}"></div>
+                                <div class="volume" ng-style="{height:item.levelPct + '%', 'background-color':item.color}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-split-pane-divider data-height="5px"></div>
+    <div data-split-pane-component class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div>
+                <!--Operations log panel-->
+            </div>
+        </div>
+    </div>
+</div>

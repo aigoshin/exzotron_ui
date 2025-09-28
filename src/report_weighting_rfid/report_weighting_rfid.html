@@ -1,0 +1,69 @@
+<div class="bg-light">
+    <div class="A4 album mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <!--            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>-->
+            <!--            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>-->
+            <!--            <button class="btn btn-sm btn-info" ng-click="exportPdf()"><i class="bi bi-file-earmark-pdf"></i></button>-->
+        </div>
+        <div>
+            <table class="w-100 table table-bordered border-dark" ng-repeat="(key, value) in items">
+                <thead>
+                <tr>
+                    <td colspan="9">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_WEIGHTING_RFID" translate-values='{item: "{{value[0].vehicleName}}", item2: "{{currentUser.companyName}}"}'></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col" class="align-middle" translate>№</th>
+                    <th scope="col" class="align-middle w-20" translate>DATE</th>
+                    <th scope="col" class="align-middle w-20" translate>LICENSE_PLATE</th>
+                    <th scope="col" class="align-middle w-20" translate>CARGO</th>
+                    <th scope="col" class="align-middle" translate>STATUS</th>
+                    <th scope="col" class="align-middle" translate>GROSS</th>
+                    <th scope="col" class="align-middle" translate>TARE</th>
+                    <th scope="col" class="align-middle" translate>NET</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--                <tr>-->
+                <!--                    <td colspan="7" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[0].datetimeEntry.split(' ')[0]">-->
+                <!--                </tr>-->
+                <tr ng-repeat="item in value"  ng-class="item.totals ? 'bg-info border-info' : ''">
+                    <td class="align-middle" ng-bind="item.totals?'Итого:': item.recordNumber"></td>
+                    <td class="align-middle" ng-bind="formatDate(item.datetimeEntry, 'YYYY-MM-DD HH:mm:ss')"></td>
+                    <td class="align-middle" ng-bind="item.plateNumber"></td>
+                    <td class="align-middle" ng-bind="item.productName"></td>
+                    <td class="align-middle" ng-bind="item.status | translate"></td>
+                    <td class="align-middle" ng-bind="item.grossWeight | number:2"></td>
+                    <td class="align-middle" ng-bind="item.tareWeight | number:2"></td>
+                    <td class="align-middle" ng-bind="item.netWeight | number:2"></td>
+                </tr>
+                <!--                <tr ng-if="addSpacing(item, value[$index+1])" ng-repeat-end>-->
+                <!--                    <td class="p-0" colspan="7">-->
+                <!--                        <table class="w-100">-->
+                <!--                            <tr ng-show="dateMap[value[item.additional?$index-1:$index].weightbridgeId+value[item.additional?$index-1:$index].datetimeEntry.split(' ')[0]] && !isSameDate(reportDateTo, reportDateFrom)">-->
+                <!--                                <td colspan="5" class="days-totals-td" ng-bind="'Итого за день: Брутто ' +-->
+                <!--                                (dateMap[value[item.additional?$index-1:$index].imei+value[item.additional?$index-1:$index].datetimeEntry.split(' ')[0]].grossWeight | number:2) +-->
+                <!--                                '   Нетто ' + (dateMap[value[item.additional?$index-1:$index].weightbridgeId+value[item.additional?$index-1:$index].datetimeEntry.split(' ')[0]].netWeight | number:2)"></td>-->
+                <!--                            </tr>-->
+                <!--                            <tr ng-show="value[$index+1].datetimeEntry && !isSameDate(reportDateTo, reportDateFrom)">-->
+                <!--                                <td colspan="7" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[$index+1].datetimeEntry.split(' ')[0]">-->
+                <!--                            </tr>-->
+                <!--                            <tr ng-show="item.additional">-->
+                <!--                                <td colspan="5" class="days-totals-td" ng-bind="'Итого за период: Брутто ' +-->
+                <!--                                (counterMap[key].grossWeight | number:2) +-->
+                <!--                                '   Нетто ' + (counterMap[key].netWeight | number:2)"></td>-->
+                <!--                            </tr>-->
+                <!--                        </table>-->
+                <!--                    </td>-->
+                <!--                </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

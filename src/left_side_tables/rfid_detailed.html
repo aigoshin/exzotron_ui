@@ -1,0 +1,78 @@
+<div class="col object-rfid-balance-table-wrapper p-0">
+    <div>
+        <div class="p-2">
+            <div class="form-check form-check-inline">
+                <div class="custom-control custom-checkbox p-1">
+                    <input class="form-check-input custom-control-input" ng-change="selectAllObjects()" type="checkbox" ng-model="ui.selectAllObjects" id="select_all_objects">
+                    <label class="form-check-label custom-control-label" for="select_all_objects" translate>SELECT_ALL</label>
+                </div>
+            </div>
+            <div class="form-check form-check-inline">
+                <input type="text" ng-model="ui.objectsSearch" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+            </div>
+            <div class="form-check form-check-inline">
+                <button class="btn btn-sm btn-success" ng-click="reportDetailedRfid()" translate><i class="bi bi-check"></i></button>
+            </div>
+        </div>
+        <table id="objects_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+            <thead class="thead-dark">
+            <tr>
+                <th class="pl-4" id="object_name"><span ts-criteria="name" translate>OBJECT</span></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in objects | filter: {name:ui.objectsSearch}" ts-repeat>
+                <td class="pl-1">
+                    <div class="form-check form-check-inline">
+                        <div class="custom-control custom-checkbox p-0">
+                            <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedObjects" checklist-value="item.imei" id={{item.id+'object'}}>
+                            <label class="form-check-label custom-control-label" for={{item.id+'object'}}>{{item.name}}</label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <div class="p-2">
+            <div class="form-check form-check-inline">
+                <div class="custom-control custom-checkbox p-1">
+                    <input class="form-check-input custom-control-input" ng-change="selectAllRfid()" type="checkbox" ng-model="ui.selectAllRfid" id="select_all_rfid">
+                    <label class="form-check-label custom-control-label" for="select_all_rfid" translate>SELECT_ALL</label>
+                </div>
+            </div>
+            <div class="form-check form-check-inline">
+                <input type="text" ng-model="ui.rfidSearch" class="form-control form-control-sm" placeholder="{{'SEARCH'|translate}}"/>
+            </div>
+            <div class="form-check form-check-inline">
+                <button class="btn btn-sm btn-success" ng-click="reportDetailedRfid()" translate><i class="bi bi-check"></i></button>
+            </div>
+        </div>
+        <table id="rfid_objects_table" class="table table-borderless bg-light table-hover table-striped object-rfid-balance-table" ts-wrapper>
+            <thead class="thead-dark">
+            <tr>
+                <th class="pl-4" id="rfid_object_name"><span ts-criteria="name" translate>NAME</span></th>
+                <th>RFID</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in rfidObjects | filter: ui.rfidSearch" ts-repeat>
+                <td class="pl-1">
+                    <div class="form-check form-check-inline">
+                        <div class="custom-control custom-checkbox p-0">
+                            <input class="form-check-input custom-control-input" type="checkbox" checklist-model="ui.selectedRfidObjects" checklist-value="item.rfid" id={{item.id+'rfid_object'}}>
+                            <label class="form-check-label custom-control-label" for={{item.id+'rfid_object'}}>{{item.name}}</label>
+                        </div>
+                    </div>
+                </td>
+                <td ng-bind="item.rfid"></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

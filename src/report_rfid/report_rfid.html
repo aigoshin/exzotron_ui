@@ -1,0 +1,45 @@
+<div class="bg-light">
+    <div class="A4 mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportPdf()"><i class="bi bi-file-earmark-pdf"></i></button>
+        </div>
+
+        <div>
+            <table class="w-100 table table-bordered border-dark" ng-repeat="(key, value) in items">
+                <thead>
+                <tr>
+                    <td colspan="5">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_BY_RFID" translate-values='{item: "{{key}}", item2: "{{value[0].rfidName}}"}'></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col" class="align-middle w-25" translate>DATE</th>
+                    <th scope="col" class="align-middle w-25" translate>OBJECT</th>
+                    <th scope="col" class="align-middle w-25" translate>DEBIT</th>
+                    <th scope="col" class="align-middle w-25" translate>CREDIT</th>
+                    <th scope="col" class="align-middle w-25" translate>BALANCE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[0].dateTime.split(' ')[0]">
+                </tr>
+                <tr ng-repeat="item in value" ng-class="item.totals?'bg-info border-info':''">
+                    <td class="align-middle" ng-bind="item.totals?'Итого:': formatDate(item.dateTime, 'YYYY-MM-DD HH:mm')"></td>
+                    <td class="align-middle" ng-bind="item.objectName"></td>
+                    <td class="align-middle" ng-bind="item.debit | number:2"></td>
+                    <td class="align-middle" ng-bind="item.credit | number:2"></td>
+                    <td class="align-middle" ng-bind="item.totals?'': (item.count | number:2)"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

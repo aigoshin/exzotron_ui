@@ -1,0 +1,155 @@
+<div data-split-pane data-split-pane-properties="balanceSplitPaneProperties">
+    <div data-split-pane-component data-height="60%" class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="main-table-wrapper shadow">
+                <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" class="align-middle border-0">#</th>
+                        <th ts-criteria="name" ts-default scope="col" class="align-middle border-0" translate>NAME</th>
+                        <th ts-criteria="phoneNumber" scope="col" class="align-middle border-0" translate>PHONE</th>
+                        <th ts-criteria="imei" scope="col" class="align-middle border-0">IMEI</th>
+                        <th ts-criteria="trkTypeName" scope="col" class="align-middle border-0" translate="TRK_TYPE"></th>
+                        <th ts-criteria="productName" scope="col" class="align-middle border-0" translate>PRODUCT</th>
+                        <th ts-criteria="divisionName" scope="col" class="align-middle border-0" translate>DIVISION</th>
+                        <th ts-criteria="createdOn" scope="col" class="align-middle border-0" translate>LAST_RECEIVED_PACKAGE_TIME</th>
+                        <th ts-criteria="createdOn" scope="col" class="align-middle border-0" translate>REGISTRATION_DATE</th>
+                        <th ts-criteria="licenseDate" scope="col" class="align-middle border-0" translate="LICENSE_DATE"></th>
+                        <th ts-criteria="notSentMessagesCount" scope="col" class="align-middle border-0" translate>NOT_SENT_MESSAGES_COUNT</th>
+                        <th ts-criteria="status" scope="col" class="align-middle border-0" translate>STATUS</th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="object in objects | filter: search" ts-repeat ng-click="setCurrentObject(object)"
+                        ng-class=" object.id == currentObject.id ? 'badge-secondary' : ''">
+                        <td class="align-middle width-10" ng-bind="$index+1"></td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="object.name" ng-show="selectedObject.id != object.id"></span>
+                            <div class="input-group" ng-show="selectedObject.id == object.id">
+                                <input minlength="1" type="text" class="form-control form-control-sm" ng-model="selectedObject.name">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25">
+                            <span ng-bind="object.phoneNumber" ng-show="selectedObject.id != object.id"></span>
+                            <div class="input-group" ng-show="selectedObject.id == object.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedObject.phoneNumber">
+                            </div>
+                        </td>
+                        <td class="align-middle w-25" ng-bind="object.imei"></td>
+                        <td class="align-middle w-15">
+                            <span ng-bind="object.trkTypeName" ng-show="selectedObject.id != object.id"></span>
+                            <div class="input-group" ng-show="selectedObject.id == object.id">
+                                <select type="text" class="form-control form-control-sm" ng-model="selectedObject.trkTypeId">
+                                    <option ng-repeat="trkType in trkTypes" ng-value="trkType.id">{{trkType.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle w-15">
+                            <span ng-bind="object.productName" ng-show="selectedObject.id != object.id"></span>
+                            <div class="input-group" ng-show="selectedObject.id == object.id">
+                                <select type="text" class="form-control form-control-sm" ng-model="selectedObject.productId">
+                                    <option ng-repeat="product in products" ng-value="product.id">{{product.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="object.divisionName" ng-show="selectedObject.id != object.id"></span>
+                            <div class="input-group" ng-show="selectedObject.id == object.id">
+                                <select type="text" class="form-control form-control-sm" ng-model="selectedObject.divisionId">
+                                    <option ng-repeat="division in divisions" ng-value="division.id">{{division.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle" ng-bind="object.lastReceivedPackageTime | date:'medium'"></td>
+                        <td class="align-middle" ng-bind="object.createdOn | date:'medium'"></td>
+                        <td class="align-middle width-125">
+                            <span ng-bind="object.licenseDate | date:'medium'" ng-show="selectedObject.id != object.id || !superUser"></span>
+                            <div class="dropdown width-200" ng-if="selectedObject.id == object.id && superUser">
+                                <b id="dropdown" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                    <div class="input-group input-group-sm" ng-click="ui.licenseDateField=!ui.licenseDateField">
+                                        <input id="doc_date" type="text" class="form-control" data-ng-model="selectedObject.licenseDate">
+                                        <div class="input-group-append input-group-sm">
+                                            <span class="input-group-text" id="basic-addon2"><i class="bi bi-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </b>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':ui.licenseDateField}">
+                                    <datetimepicker data-ng-model="selectedObject.licenseDate" style="overflow: visible"
+                                                    data-on-set-time="onLicenseDateSet(newVal, oldVal)"
+                                                    data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                                </ul>
+                            </div>
+                        </td>
+                        <td class="align-middle" ng-bind="object.notSentMessagesCount"></td>
+                        <td class="align-middle" ng-bind="object.status"></td>
+                        <td ng-show="selectedObject.id != object.id" class="align-middle width-25">
+                            <span ng-if="object.dataExchange==3" class="position-relative" us-spinner spinner-key="object.id" spinner-start-active="true"></span>
+                            <i ng-if="object.dataExchange!=3" role="button" ng-class="object.dataExchange == 0 ? 'bi bi-lock-fill ' : 'bi bi-unlock'" tooltip-append-to-body="true" uib-tooltip="{{object.dataExchange == 1 ? ('LOCK'|translate) : ('UNLOCK'|translate)}}" ng-click="setStatus(object)"></i>
+                        </td>
+                        <td ng-show="selectedObject.id != object.id" tooltip-append-to-body="true" uib-tooltip="Журнал данных (В интерфейсе показаны первые 500 строк. Полный отчет выгружается в Excel)" class="align-middle width-25"><i role="button" class="bi bi-cpu-fill" ng-click="$event.stopPropagation();getObjectData(object)"></i></td>
+                        <td ng-show="selectedObject.id != object.id" class="align-middle width-25"><i role="button" ng-class="object.id == currentObject.id ? 'bi bi-star-fill' : 'bi  bi-star'"></i></td>
+                        <td ng-show="selectedObject.id != object.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="editObject(object)"></i></td>
+                        <td ng-show="selectedObject.id != object.id" class="align-middle width-25"><i role="button" class="bi bi-trash" ng-click="deleteObject(object)"></i></td>
+                        <td ng-show="selectedObject.id == object.id" colspan="5" class="align-middle">
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm" ng-click="saveObject(object)"><i class="bi bi-check"></i></button>
+                                <button class="btn btn-danger btn-sm" ng-click="cancelEdit()"><i class="bi bi-x"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newObject.name">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newObject.phone">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <div class="input-group">
+                                <input maxlength="100" type="text" class="form-control form-control-sm" ng-model="newObject.imei">
+                            </div>
+                        </td>
+                        <td colspan="13" class="align-middle">
+                            <button class="btn btn-success btn-sm" ng-disabled="!newObject.name || !newObject.imei" ng-click="addObject()"><i class="bi bi-plus"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div data-split-pane-divider data-height="5px"></div>
+    <div data-split-pane-component class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="main-table-wrapper shadow">
+                <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper ng-show="objectData && objectData.length">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th ts-criteria="{{k}}" scope="col" class="align-middle border-0"
+                            ng-repeat="(k, v) in objectData[0]">
+                            <span ng-bind="k.toUpperCase()"></span>
+                            <i ng-if="$index==0" class="bi bi-file-earmark-spreadsheet" ng-click="exportObjectDataExcel()"></i>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in objectData | filter: search" ts-repeat ng-click="setCurrentDataRow(item)"
+                        ng-class="{'badge-secondary':dataId==item.id}">
+                        <td class="align-middle width-10" ng-repeat="(tdK, tdV) in item" ng-bind="tdV"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

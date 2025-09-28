@@ -1,0 +1,124 @@
+<div class="overlay" ng-show="zoomedImage" ng-click="closeZoom()"></div>
+
+<div data-split-pane data-split-pane-properties="weightOperationsSplitPaneProperties" class="photo-wrapper">
+    <div data-split-pane-component data-height="60%" class="bg-light">
+        <div class="pretty-split-pane-component-inner">
+            <div class="main-table-wrapper overflow-auto shadow">
+                <table class="table table-borderless table-striped table-hover account-operations-table" ts-wrapper>
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" class="align-middle border-0" translate="DATE"></th>
+                        <th scope="col" class="align-middle border-0" translate="DOCUMENT"></th>
+                        <th scope="col" class="align-middle border-0" translate="LICENSE_PLATE"></th>
+                        <th scope="col" class="align-middle border-0" translate="VEHICLE"></th>
+                        <th scope="col" class="align-middle border-0" translate="TRAILER_PLATE"></th>
+                        <th scope="col" class="align-middle border-0" translate="CARGO"></th>
+                        <th scope="col" class="align-middle border-0" translate="GROSS"></th>
+                        <th scope="col" class="align-middle border-0" translate="TARE"></th>
+                        <th scope="col" class="align-middle border-0" translate="NET"></th>
+                        <th scope="col" class="align-middle border-0" translate="STATUS"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                        <th scope="col" class="align-middle border-0"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in weightOperationsLog | filter: search" ng-click="selectLog(item)"
+                        ng-class="item.id == currentItem.id ? 'badge-secondary' : ''">
+                        <td ng-bind="item.datetimeEntry | date:'dd.MM.yyyy HH:mm:ss'"></td>
+                        <td ng-bind="item.recordNumber"></td>
+                        <td class="align-middle">
+                            <span ng-bind="item.plateNumber" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="text" class="form-control form-control-sm" ng-model="selectedItem.plateNumber">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.vehicleName" ng-if="selectedItem.id != item.id"></span>
+
+                            <div ng-if="selectedItem.id == item.id" class="width-200"
+                                 ng-click="$event.preventDefault();$event.stopPropagation();">
+                                <ui-select ng-model="selectedItem.vehicleName"
+                                           autofocus="true" class="width-200"
+                                           theme="select2" on-select="saveVehicle($item, $model, selectedItem)">
+                                    <ui-select-match placeholder="Введите название авто...">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="vehicle.name as vehicle in ui.vehicles track by $index"
+                                                       refresh="getVehicles($select.search)"
+                                                       refresh-delay="500">
+                                        <span ng-bind-html="vehicle.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </td>
+                        <td ng-bind="item.trailerPlate"></td>
+                        <td class="align-middle w-15">
+                            <span ng-bind="item.productName" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <select type="text" class="form-control form-control-sm" ng-model="selectedItem.productId">
+                                    <option ng-repeat="product in products" ng-value="product.id">{{product.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.grossWeight | number : 2" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="number" class="form-control form-control-sm" ng-model="selectedItem.grossWeight">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.tareWeight | number : 2" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="number" class="form-control form-control-sm" ng-model="selectedItem.tareWeight">
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span ng-bind="item.netWeight | number : 2" ng-show="selectedItem.id != item.id"></span>
+                            <div class="input-group" ng-show="selectedItem.id == item.id">
+                                <input type="number" class="form-control form-control-sm" ng-model="selectedItem.netWeight">
+                            </div>
+                        </td>
+                        <td ng-click="$event.preventDefault();$event.stopPropagation();" ng-dblclick="toggleWeightMode(item)">
+                            <span ng-switch="item.status">
+                                <span ng-switch-when="ENTRY" translate="ENTRY"></span>
+                                <span ng-switch-when="EXIT" translate="EXIT"></span>
+                                <span ng-switch-default>{{ item.status }}</span>
+                            </span>
+                        </td>
+                        <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" ng-click="recalculate(item)" class="bi bi-arrow-repeat"></i></td>
+                        <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" ng-click="toggleReport(item)" ng-class="item.reportEnabled ? 'bi bi-unlock' : 'bi  bi-lock'"></i></td>
+                        <td ng-show="selectedItem.id != item.id" class="align-middle width-25"><i role="button" class="bi bi-pencil" ng-click="edit(item)"></i></td>
+                        <td ng-show="selectedItem.id == item.id" colspan="3" class="align-middle">
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm" ng-click="saveLog()"><i class="bi bi-check"></i></button>
+                                <button class="btn btn-danger btn-sm" ng-click="cancel()"><i class="bi bi-x"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div data-split-pane-divider data-height="5px"></div>
+    <div data-split-pane-component class="bg-light">
+        <div class="pretty-split-pane-component-inner" ng-show="photoLoaded">
+            <h4 ng-show="!photos.length" class="text-center">Нет фото</h4>
+            <div ng-show="photos.length">
+                <div class="col col-12">
+                    <div class="d-flex flex-wrap">
+                        <div ng-repeat="photo in photos" class="flex-shrink-0">
+                            <div style="cursor: pointer">
+                                <div><span class="font-weight-bold p-1" ng-bind="photo.createdAt"></span><span class="p-1" ng-bind="'('+photo.photoType+')'"></span></div>
+                                <img ng-src="{{'data:image/png;base64,'+ photo.content}}"
+                                     class="rounded float-left img-thumbnail thumbnail width-400  zoomable-img"
+                                     ng-class="{zoomed: zoomedImage === photo}"
+                                     ng-click="toggleZoom(photo)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

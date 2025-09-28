@@ -1,0 +1,89 @@
+<form novalidate name="sensorForm" ng-submit="ok(sensorForm)">
+    <div class="modal-body pt-4 pb-4">
+        <div class="row">
+            <label for="sensor_type" class="col-sm-3 col-form-label" translate>TYPE</label>
+            <div class="col-sm-9">
+                <select id="sensor_type" ng-required="true" name="sensor_type" ng-model="data.sensor.sensorTypeId"
+                        class="form-control form-control-sm" ng-change="updateSensorType(data.sensor.sensorTypeId)"
+                        ng-class="{'is-invalid':(sensorForm.sensor_type.$error.required)  && (sensorForm.sensor_type.$touched || sensorForm.$submitted)}">
+                    <option ng-repeat="sensorType in data.sensorTypes" ng-value="sensorType.sensorTypeId">
+                        {{sensorType.sensorDefNameRu}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <label for="sensor_name" class="col-sm-3 col-form-label" translate>NAME</label>
+            <div class="col-sm-9">
+                <input ng-class="{'is-invalid':(sensorForm.sensor_name.$error.required)  && (sensorForm.sensor_name.$touched || sensorForm.$submitted)}"
+                       ng-required="true" ng-model="data.sensor.sensorName" type="text" class="form-control form-control-sm"
+                       id="sensor_name" name="sensor_name">
+            </div>
+        </div>
+        <div class="row">
+            <label for="units" class="col-sm-3 col-form-label" translate>UNITS</label>
+            <div class="col-sm-9">
+                <input ng-class="{'is-invalid':(sensorForm.units.$error.required)  && (sensorForm.units.$touched || sensorForm.$submitted)}"
+                       ng-required="true" ng-model="data.sensor.sensorUnits" type="text" class="form-control form-control-sm" id="units"
+                       name="units">
+            </div>
+        </div>
+        <div class="row">
+            <label for="data_name" class="col-sm-3 col-form-label" translate>SOURCE</label>
+            <div class="col-sm-9">
+                <input disabled readonly ng-model="currentSensorType.dataName" type="text" class="form-control form-control-sm" id="data_name" name="data_name">
+            </div>
+        </div>
+        <div class="text-center">
+            <h5 translate>CALIBRATION</h5>
+        </div>
+        <div class="table-fixed-head">
+            <a ng-paste="pasteCalibration($event)">
+                <table class="table table-striped table-borderless account-operations-table calibration-table">
+                <thead class="thead-dark">
+                <tr>
+                    <th class="w-50" translate>INPUT</th>
+                    <th class="w-50" translate>CALIBRATION_VALUE</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in data.sensor.sensorCalibrationList">
+                    <td><input ng-paste="$event.preventDefault()" type="number" name="{{'input'+$index}}" step="0.0001" required ng-pattern="nonZeroNumericRegexp" ng-class="{'is-invalid':(sensorForm['input'+$index].$error.required||sensorForm['input'+$index].$error.pattern)  && (sensorForm['input'+$index].$touched || sensorForm.$submitted)}" class="form-control form-control-sm" ng-model="item.in"></td>
+                    <td><input ng-paste="$event.preventDefault()" type="number" name="{{'output'+$index}}" step="0.0001" required ng-pattern="nonZeroNumericRegexp" ng-class="{'is-invalid':(sensorForm['output'+$index].$error.required||sensorForm['output'+$index].$error.pattern)  && (sensorForm['output'+$index].$touched || sensorForm.$submitted)}" class="form-control form-control-sm" ng-model="item.out"></td>
+                    <td><i role="button" class="bi bi-trash" ng-click="deleteCalibration($index)"></i></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="btn btn-success btn-sm" ng-click="data.sensor.sensorCalibrationList.push({sensorId:data.sensor.sensorId,in:0,out:0})"><i class="bi bi-plus"></i></button></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr ng-if="data.sensor.sensorId">
+                    <td class="upload-btn-wrapper float-right position-relative">
+                        <button type="button" class="btn btn-dark btn-sm">
+                            <input ng-click="$event.stopPropagation()" type="file" ngf-keep="false" ngf-select="import($file)"
+                                   ngf-pattern="'.csv,.xlsx,.txt'" accept=".csv,.xlsx,.txt" ng-model="file" name="file"/>
+                            <span translate>IMPORT</span>
+                        </button>
+                    </td>
+                    <td>
+                        <a ng-click="$event.stopPropagation()" type="button" class="btn btn-dark btn-sm" ng-href="{{exportUrl}}" download="export.txt" translate>
+                            EXPORT
+                        </a>
+                    </td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            </a>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">
+            <i role="button" class="bi bi-check"></i>
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">
+            <i role="button" class="bi bi-x"></i>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,63 @@
+<form novalidate name="moveFuelForm" ng-submit="ok(moveFuelForm)">
+    <div class="modal-body pt-4 pb-4">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="date_time" translate>DATE</label>
+                <div class="dropdown">
+                    <b id="dropdown" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        <div class="input-group input-group-sm" ng-click="showDropdown=!showDropdown">
+                            <input id="date_time" type="text" class="form-control" data-ng-model="item.dateTime">
+                            <div class="input-group-append input-group-sm">
+                                <span class="input-group-text" id="basic-addon2"><i class="bi bi-calendar"></i></span>
+                            </div>
+                        </div>
+                    </b>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-class="{'show':showDropdown}">
+                        <datetimepicker data-ng-model="item.dateTime"
+                                        data-on-set-time="onTimeSet(newDate, oldDate)"
+                                        data-datetimepicker-config="{modelType: 'YYYY-MM-DD HH:mm:ss'}"/>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="count" translate>COUNT</label>
+                <input ng-class="{'is-invalid':(moveFuelForm.count.$error.required)  && (moveFuelForm.count.$touched || moveFuelForm.$submitted)}"
+                       ng-required="true" max="9999999" ng-model="item.count" type="number"
+                       class="form-control form-control-sm" id="count" name="count">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="storehouse_from" translate>STOREHOUSE_FROM</label>
+                <select ng-class="{'is-invalid':(moveFuelForm.storehouse_from.$error.required)  && (moveFuelForm.storehouse_from.$touched || moveFuelForm.$submitted)}"
+                        type="text" ng-required="true" id="storehouse_from" name="storehouse_from" class="form-control form-control-sm" ng-model="item.storageFromId">
+                    <option ng-repeat="storehouse in storehouses" ng-value="storehouse.id">{{storehouse.name}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="storehouse_to" translate>STOREHOUSE_TO</label>
+                <select ng-class="{'is-invalid':(moveFuelForm.storehouse_to.$error.required)  && (moveFuelForm.storehouse_to.$touched || moveFuelForm.$submitted)}"
+                        type="text" ng-required="true" id="storehouse_to" name="storehouse_to" class="form-control form-control-sm" ng-model="item.storageToId">
+                    <option ng-repeat="storehouse in storehouses" ng-value="storehouse.id">{{storehouse.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row" ng-show="item.storageFromId">
+            <div class="form-group col-md-6">
+                <label for="tank" translate>TANK</label>
+                <select ng-class="{'is-invalid':(moveFuelForm.tank.$error.required)  && (moveFuelForm.tank.$touched || moveFuelForm.$submitted)}"
+                        type="text" ng-required="true" id="tank" name="tank" class="form-control form-control-sm" ng-model="item.tankFromId">
+                    <option ng-repeat="tank in tanks  | filter : {storehouseId: item.storageFromId}" ng-value="tank.id">{{tank.name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">
+            <i role="button" class="bi bi-check"></i>
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">
+            <i role="button" class="bi bi-x"></i>
+        </button>
+    </div>
+</form>

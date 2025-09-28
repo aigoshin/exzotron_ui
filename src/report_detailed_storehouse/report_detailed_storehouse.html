@@ -1,0 +1,66 @@
+<div class="bg-light">
+    <div class="A4 album mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <div class="form-check form-check-inline"  tooltip-append-to-body="true">
+                <div class="custom-control custom-checkbox p-1" >
+                    <input class="form-check-input custom-control-input" type="checkbox" ng-change="setByDays(byDays);getReport()" ng-model="byDays" id="byDays">
+                    <label class="form-check-label custom-control-label" for="byDays" translate>BY_DAYS</label>
+                </div>
+                <div class="custom-control custom-checkbox p-1">
+                    <input class="form-check-input custom-control-input" type="checkbox" ng-change="getReport()" ng-model="control" id="control">
+                    <label class="form-check-label custom-control-label" for="control" translate="CONTROL"></label>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+        </div>
+        <div>
+            <table class="w-100 table table-bordered border-dark"  ng-repeat="(key, value) in items" ng-init="totals = initTotals(value)">
+                <thead class="thead-dark">
+                <tr>
+                    <td colspan="{{control?9:7}}">
+                        <div class="text-center">
+                            <h4 class="text-info" translate="REPORT_FUEL_MOVING_STOREHOUSE" translate-values='{item: "{{value[0].storehouseName}}"}'></h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                            <div translate="PRODUCT_TYPE" translate-values='{item: "{{value[0].productName}}"}'></div>
+                            <div translate="REPORT_START_REMAINS" translate-values='{item: "{{value[0].reportStartRemains}}"}'></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col w-20"><span translate="DATE"></span></th>
+                    <th ng-if="!byDays" class="col w-10"><span translate="TYPE"></span></th>
+                    <th ng-if="!byDays" class="col w-10"><span translate="OPERATION_ID"></span></th>
+                    <th class="col w-10"><span translate="INCOME"></span></th>
+                    <th class="col w-10"><span translate="CONSUMPTION"></span></th>
+                    <th class="col w-15"><span translate="FINAL_COUNTER"></span></th>
+                    <th ng-if="control" class="col" id="storehouse_level"><span translate="LEVEL_END"></span></th>
+                    <th ng-if="control" class="col" id="deviation"><span translate="DEVIATION"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="tank in value">
+                    <td ng-bind="byDays?formatDate(tank.dateTime, 'YYYY-MM-DD'):tank.dateTime"></td>
+                    <td ng-if="!byDays" ng-bind="tank.docTypeName"></td>
+                    <td ng-if="!byDays" ng-bind="tank.operationLogId"></td>
+                    <td class="text-right" ng-bind="tank.debit | number : 2"></td>
+                    <td class="text-right" ng-bind="tank.credit | number : 2"></td>
+                    <td class="text-right" ng-bind="tank.count | number : 2"></td>
+                    <td ng-if="control" class="text-right" ng-bind="tank.factCapacity | number : 2"></td>
+                    <td ng-if="control" class="text-right" ng-bind="(tank.count != null && tank.factCapacity != null?(tank.factCapacity-tank.count| number : 2):'') "></td>
+                </tr>
+                <tr>
+                    <td translate="TOTALS"></td>
+                    <td ng-if="!byDays"></td>
+                    <td ng-if="!byDays"></td>
+                    <td class="text-right" ng-bind="totals.totalDebit | number : 2"></td>
+                    <td class="text-right" ng-bind="totals.totalCredit | number : 2"></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

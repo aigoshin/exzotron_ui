@@ -1,0 +1,79 @@
+<div class="bg-light">
+    <div class="A4 mt-5 shadow" id="report" ng-show="reportDateFrom && reportDateTo && showReport">
+        <div class="inline-flex float-right m-4" id="buttons">
+            <div class="form-check form-check-inline">
+                <div class="custom-control custom-checkbox p-1">
+                    <input class="form-check-input custom-control-input" type="checkbox" ng-change="getReport()" ng-model="showVehicles" id="showVehicles">
+                    <label class="form-check-label custom-control-label" for="showVehicles" translate="VEHICLE"></label>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-info" ng-click="printReport()"><i class="bi bi-printer"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportExcel()" tooltip-append-to-body="true" uib-tooltip="Стандартный отчет"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+            <button class="btn btn-sm btn-success" ng-click="exportExcelFull()" tooltip-append-to-body="true" uib-tooltip="Полный отчет"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportPdf()"><i class="bi bi-file-earmark-pdf"></i></button>
+            <button class="btn btn-sm btn-info" ng-click="exportCsv()"><i class="bi bi-file-earmark-text"></i></button>
+        </div>
+        <div>
+            <table class="w-100 table table-bordered border-dark" ng-repeat="(key, value) in items">
+                <thead>
+                <tr>
+                    <td colspan="{{showVehicles?6:5}}">
+                        <div class="text-center">
+                            <h4 class="text-info">
+                                <span translate="REPORT_OBJECT" translate-values='{item: "{{key}}", item2: "{{value[0].objectName}}"}'></span>
+                            </h4>
+                            <div translate="FOR_PERIOD" translate-values='{reportDateFrom: "{{reportDateFrom}}", reportDateTo: "{{reportDateTo}}"}'></div>
+                            <div>
+                                <span translate="DIVISION"></span>: <span ng-bind="division.name"></span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col" class="align-middle" translate>ID</th>
+                    <th scope="col" class="align-middle w-20" translate>DATE</th>
+                    <th scope="col" class="align-middle w-20" translate>RFID</th>
+                    <th scope="col" class="align-middle w-35" translate>NAME</th>
+                    <th ng-if="showVehicles" scope="col" class="align-middle w-20" translate>VEHICLE</th>
+                    <th scope="col" class="align-middle w-15" translate>COUNT</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="{{showVehicles?6:5}}" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[0].dateTime.split(' ')[0]">
+                </tr>
+                <tr ng-repeat-start="item in value" ng-if="!item.additional" ng-class="item.totals || items.additional ?'bg-info border-info':''">
+                    <td class="align-middle" ng-bind="item.id"></td>
+                    <td class="align-middle" ng-bind="item.totals?'Итого:': formatDate(item.dateTime, 'YYYY-MM-DD HH:mm')"></td>
+                    <td class="align-middle" ng-bind="item.rfid1"></td>
+                    <td class="align-middle" ng-bind="item.rfidName1"></td>
+                    <td ng-if="showVehicles" class="align-middle" ng-bind="item.vehicleName"></td>
+                    <td class="align-middle text-right" ng-bind="-item.quantity | number:2"></td>
+                </tr>
+                <tr ng-if="addSpacing(item, value[$index+1])" ng-repeat-end>
+                   <td class="p-0" colspan="{{showVehicles?6:5}}">
+                       <table class="w-100">
+                           <tr ng-if="dateMap[value[item.additional?$index-1:$index].imei+value[item.additional?$index-1:$index].dateTime.split(' ')[0]] && !isSameDate(reportDateTo, reportDateFrom)">
+                               <td colspan="{{showVehicles?6:5}}" class="days-totals-td" ng-bind="'Итого за день: ' + (dateMap[value[item.additional?$index-1:$index].imei+value[item.additional?$index-1:$index].dateTime.split(' ')[0]] | number:2)"></td>
+                           </tr>
+                           <tr ng-if="value[$index+1].dateTime && !isSameDate(reportDateTo, reportDateFrom)">
+                               <td colspan="{{showVehicles?6:5}}" style="background-color: #dee2e6!important;text-align: center" ng-bind="value[$index+1].dateTime.split(' ')[0]">
+                           </tr>
+                           <tr ng-if="item.additional">
+                               <td colspan="{{showVehicles?6:5}}" class="days-totals-td" ng-bind="'Итого за период: ' + (-counterMap[key].quantity | number:2)"></td>
+                           </tr>
+                           <tr ng-if="item.additional">
+                               <td class="align-middle" ng-bind="totalTankStartLabel + ': ' + (item.tankStart)"></td>
+                               <td class="align-middle" ng-bind="totalTankEndLabel + ': ' + (item.tankEnd)"></td>
+                               <td class="align-middle" ng-bind="totalTankLabel + ': ' + (item.tank)"></td>
+                           </tr>
+                       </table>
+                   </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

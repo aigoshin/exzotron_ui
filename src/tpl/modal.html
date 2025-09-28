@@ -1,0 +1,11 @@
+<div class="modal-body pt-4 pb-4">
+   <div class="text-break" ng-bind="modalOptions.bodyText"></div>
+</div>
+<div class="modal-footer">
+    <button ng-show="modalOptions.showOk" class="btn btn-primary" type="button" ng-click="modalOptions.ok(true)">
+        <i role="button" class="bi bi-check"></i>
+    </button>
+    <button ng-show="modalOptions.showCancel" class="btn btn-danger" type="button" ng-click="modalOptions.cancel()">
+        <i role="button" class="bi bi-x"></i>
+    </button>
+</div>
